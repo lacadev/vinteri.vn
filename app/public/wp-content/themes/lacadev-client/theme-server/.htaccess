@@ -1,0 +1,10 @@
+# Cho phép download .zip và đọc .json
+Options -Indexes
+
+<FilesMatch "\.(zip|json)$">
+    Require all granted
+</FilesMatch>
+
+# Đặt MIME type đúng
+AddType application/json .json
+AddType application/zip .zip
