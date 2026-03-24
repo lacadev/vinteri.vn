@@ -1,0 +1,22 @@
+/**
+ * Categories Gallery Block — Frontend CSS.
+ */
+
+.wp-block-lacadev-categories-gallery-block {
+	// Token utilities scoped to this block
+	.text-on-surface-variant { color: var(--color-on-surface-variant, #6b7280); }
+	.text-on-surface         { color: var(--color-on-surface, #1c1917); }
+	.border-outline-variant  { border-color: var(--color-outline-variant, #ddd); }
+	.bg-surface-container-low {
+		background-color: var(--color-surface-container-low, #f5f5f5);
+	}
+	.bg-surface-container {
+		background-color: var(--color-surface-container, #ebebeb);
+	}
+	.font-headline { font-family: var(--font-headline, inherit); }
+
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
+}

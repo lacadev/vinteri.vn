@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "1.0.0",
+  "name": "lacadev/bento-room-block",
+  "title": "Bento Room Gallery",
+  "description": "Hiển thị danh mục dạng bento grid bất đối xứng: 1 main lớn + 2 panels nhỏ",
+  "category": "lacadev-blocks",
+  "icon": "layout",
+  "editorScript": "lacadev-block-bento-room-block-editor",
+  "style": "lacadev-block-bento-room-block",
+  "keywords": ["bento", "room", "gallery", "taxonomy", "grid", "danh mục"],
+  "textdomain": "laca",
+  "attributes": {
+    "postType": {
+      "type": "string",
+      "default": "post"
+    },
+    "taxonomy": {
+      "type": "string",
+      "default": "category"
+    },
+    "termIds": {
+      "type": "array",
+      "default": []
+    },
+    "mainTermId": {
+      "type": "number",
+      "default": 0
+    },
+    "curationLabel": {
+      "type": "string",
+      "default": "Curation No. 04"
+    },
+    "ctaText": {
+      "type": "string",
+      "default": "Shop The Collection"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "isFullWidth": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  }
+}
