@@ -1,166 +1,35 @@
 /**
  * Bento Room Block — Frontend CSS.
+ *
+ * Chỉ dùng SCSS cho phần Tailwind không xử lý được:
+ * - Grid height responsive theo viewport (h-[1228px] → fluid)
+ * - Aspect ratio cho mobile dùng @include aspectRatio
  */
 
+@use "../../resources/styles/theme/abstracts/variables" as *;
+@use "../../resources/styles/theme/abstracts/mixin" as *;
+
 .wp-block-lacadev-bento-room-block {
-	a { text-decoration: none; color: inherit; }
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
 
-	.block-bento-room__grid {
-		display: grid;
-		grid-template-columns: repeat(12, 1fr);
-		grid-template-rows: repeat(2, 40vw);
-		max-height: 1200px;
-		gap: 1.5rem;
+	// Grid height: responsive fluid thay cho h-[1228px] cố định trong HTML gốc
+	.bento-room-grid {
+		height: clamp(30rem, 80vw, 76.75rem);
 
-		@media (max-width: 1024px) {
-			grid-template-columns: 1fr 1fr;
+		@include maxWidth($lg) {
+			height: auto;
 			grid-template-rows: auto;
 		}
-		@media (max-width: 640px) {
-			grid-template-columns: 1fr;
+	}
+
+	// Đảm bảo item đúng tỷ lệ trên mobile khi grid bị auto height
+	.col-span-12.lg\:col-span-8.row-span-2,
+	.col-span-12.lg\:col-span-4.row-span-1 {
+		@include maxWidth($lg) {
+			@include aspectRatio(16/9);
 		}
-	}
-
-	.block-bento-room__main {
-		grid-column: span 8;
-		grid-row: span 2;
-		position: relative;
-		border-radius: 1rem;
-		overflow: hidden;
-		display: block;
-
-		@media (max-width: 1024px) {
-			grid-column: 1 / -1;
-			grid-row: auto;
-			aspect-ratio: 16 / 9;
-		}
-	}
-
-	.block-bento-room__small {
-		grid-column: span 4;
-		grid-row: span 1;
-		position: relative;
-		border-radius: 1rem;
-		overflow: hidden;
-		display: block;
-
-		@media (max-width: 1024px) {
-			grid-column: span 1;
-			aspect-ratio: 4 / 3;
-		}
-	}
-
-	.block-bento-room__img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-		transition: transform 0.8s ease;
-	}
-	.group:hover .block-bento-room__img {
-		transform: scale(1.04);
-	}
-
-	.block-bento-room__img-placeholder {
-		width: 100%;
-		height: 100%;
-		background: var(--color-surface-container-low, #e8e8e8);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 4rem;
-	}
-
-	.block-bento-room__overlay {
-		position: absolute;
-		inset: 0;
-		background: rgba(28, 25, 23, 0.25);
-		transition: background 0.4s;
-	}
-	.block-bento-room__overlay--light {
-		background: rgba(28, 25, 23, 0.12);
-	}
-	.group:hover .block-bento-room__overlay {
-		background: rgba(28, 25, 23, 0.18);
-	}
-
-	.block-bento-room__main-content {
-		position: absolute;
-		bottom: 3.5rem;
-		left: 3.5rem;
-
-		@media (max-width: 640px) {
-			bottom: 1.5rem;
-			left: 1.5rem;
-		}
-	}
-
-	.block-bento-room__curation {
-		display: block;
-		font-size: 0.7rem;
-		font-weight: 500;
-		letter-spacing: 0.2em;
-		text-transform: uppercase;
-		color: rgba(255, 255, 255, 0.75);
-		margin-bottom: 0.5rem;
-	}
-
-	.block-bento-room__main-title {
-		font-family: var(--font-headline, inherit);
-		font-size: clamp(2rem, 4vw, 3.75rem);
-		font-weight: 700;
-		color: #fff;
-		margin: 0 0 1.5rem;
-		line-height: 1.1;
-	}
-
-	.block-bento-room__cta {
-		display: inline-block;
-		background: #fff;
-		color: #1c1917;
-		padding: 0.875rem 2rem;
-		border-radius: 9999px;
-		font-size: 0.7rem;
-		font-weight: 500;
-		letter-spacing: 0.15em;
-		text-transform: uppercase;
-		transition: background 0.2s, color 0.2s;
-	}
-	.group:hover .block-bento-room__cta {
-		background: #1c1917;
-		color: #fff;
-	}
-
-	.block-bento-room__small-content {
-		position: absolute;
-		inset: 0;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
-		padding: 2rem;
-	}
-
-	.block-bento-room__small-title {
-		font-family: var(--font-headline, inherit);
-		font-size: clamp(1.5rem, 2.5vw, 2rem);
-		font-weight: 700;
-		color: #fff;
-		margin: 0 0 1rem;
-	}
-
-	.block-bento-room__explore {
-		font-size: 0.68rem;
-		font-weight: 500;
-		letter-spacing: 0.15em;
-		text-transform: uppercase;
-		color: #fff;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.6);
-		padding-bottom: 2px;
-		transition: border-color 0.2s;
-	}
-	.group:hover .block-bento-room__explore {
-		border-color: #fff;
 	}
 }

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "1.0.0",
+  "name": "lacadev/popular-picks-block",
+  "title": "Popular Picks — Products Grid",
+  "description": "Hiển thị sản phẩm WooCommerce dạng grid 4 cột với filter tab theo danh mục",
+  "category": "lacadev-blocks",
+  "icon": "products",
+  "editorScript": "lacadev-block-popular-picks-block-editor",
+  "style": "lacadev-block-popular-picks-block",
+  "keywords": ["products", "woocommerce", "grid", "shop", "popular", "picks", "sản phẩm"],
+  "textdomain": "laca",
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "default": "Popular Picks"
+    },
+    "numberOfProducts": {
+      "type": "number",
+      "default": 4
+    },
+    "orderby": {
+      "type": "string",
+      "default": "date"
+    },
+    "productCategoryIds": {
+      "type": "array",
+      "default": []
+    },
+    "showCategoryFilter": {
+      "type": "boolean",
+      "default": true
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "containerLayout": {
+      "type": "string",
+      "default": "container"
+    },
+    "__isPreview": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "example": {
+    "viewportWidth": 800,
+    "attributes": {
+      "__isPreview": true
+    }
+  }
+}

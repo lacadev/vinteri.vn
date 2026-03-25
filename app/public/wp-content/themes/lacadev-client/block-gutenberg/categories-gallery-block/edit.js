@@ -4,7 +4,9 @@ import {
 	RichText,
 	InspectorControls,
 	PanelColorSettings,
+	useBlockEditContext,
 } from '@wordpress/block-editor';
+import previewImage from './preview.png';
 import {
 	PanelBody,
 	TextControl,
@@ -107,6 +109,22 @@ function getTermImage( term ) {
 // ── Main Component ───────────────────────────────────────────────────────────
 export default function Edit( { attributes, setAttributes } ) {
 	const { subTitle, title, browseAllText, browseAllUrl, postType, taxonomy, termIds, backgroundColor, isFullWidth } = attributes;
+
+	// ── Block Preview (Inserter hover) ──────────────────────────────────────
+	// WP 6.3+: __unstableIsPreviewMode via context. Fallback: __isPreview injected via example.attributes.
+	const blockEditContext = useBlockEditContext();
+	const isPreview = ( blockEditContext.__unstableIsPreviewMode ?? false ) || ( attributes.__isPreview ?? false );
+	if ( isPreview ) {
+		return (
+			<div style={ { width: '100%', aspectRatio: '16/9', overflow: 'hidden', lineHeight: 0 } }>
+				<img
+					src={ previewImage }
+					alt={ __( 'Categories Gallery Preview', 'laca' ) }
+					style={ { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } }
+				/>
+			</div>
+		);
+	}
 
 	// ── Fetch public post types ──────────────────────────────────────────────
 	const [ postTypes, setPostTypes ] = useState( [] );

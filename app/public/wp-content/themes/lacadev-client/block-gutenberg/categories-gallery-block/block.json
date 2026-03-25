@@ -47,10 +47,23 @@
     "isFullWidth": {
       "type": "boolean",
       "default": false
+    },
+    "__isPreview": {
+      "type": "boolean",
+      "default": false
     }
   },
   "supports": {
     "html": false,
     "align": ["wide", "full"]
+  },
+  "example": {
+    "viewportWidth": 800,
+    "attributes": {
+      "subTitle": "Departments",
+      "title": "Featured Collections",
+      "browseAllText": "Browse All",
+      "__isPreview": true
+    }
   }
 }

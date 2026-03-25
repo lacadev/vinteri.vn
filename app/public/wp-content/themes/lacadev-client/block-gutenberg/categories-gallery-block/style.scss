@@ -1,20 +1,14 @@
 /**
  * Categories Gallery Block — Frontend CSS.
+ *
+ * Tailwind-first: chỉ viết SCSS cho những gì Tailwind không xử lý được.
+ * KHÔNG re-define CSS custom properties hay Tailwind utilities ở đây.
  */
 
-.wp-block-lacadev-categories-gallery-block {
-	// Token utilities scoped to this block
-	.text-on-surface-variant { color: var(--color-on-surface-variant, #6b7280); }
-	.text-on-surface         { color: var(--color-on-surface, #1c1917); }
-	.border-outline-variant  { border-color: var(--color-outline-variant, #ddd); }
-	.bg-surface-container-low {
-		background-color: var(--color-surface-container-low, #f5f5f5);
-	}
-	.bg-surface-container {
-		background-color: var(--color-surface-container, #ebebeb);
-	}
-	.font-headline { font-family: var(--font-headline, inherit); }
+@use "../../resources/styles/theme/abstracts/variables" as *;
+@use "../../resources/styles/theme/abstracts/mixin" as *;
 
+.wp-block-lacadev-categories-gallery-block {
 	a {
 		text-decoration: none;
 		color: inherit;

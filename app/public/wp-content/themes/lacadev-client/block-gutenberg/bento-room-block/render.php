@@ -9,18 +9,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$taxonomy         = esc_attr( $attributes['taxonomy'] ?? 'category' );
-$term_ids         = array_map( 'absint', $attributes['termIds'] ?? [] );
-$main_term_id     = absint( $attributes['mainTermId'] ?? 0 );
-$curation_label   = esc_html( $attributes['curationLabel'] ?? '' );
-$cta_text         = esc_html( $attributes['ctaText'] ?? '' );
-$bg_color         = $attributes['backgroundColor'] ?? '';
-$is_full_width    = (bool) ( $attributes['isFullWidth'] ?? false );
+$taxonomy       = esc_attr( $attributes['taxonomy'] ?? 'category' );
+$term_ids       = array_map( 'absint', $attributes['termIds'] ?? [] );
+$main_term_id   = absint( $attributes['mainTermId'] ?? 0 );
+$curation_label = esc_html( $attributes['curationLabel'] ?? '' );
+$cta_text       = esc_html( $attributes['ctaText'] ?? '' );
+$bg_color       = $attributes['backgroundColor'] ?? '';
+$is_full_width  = (bool) ( $attributes['isFullWidth'] ?? false );
 
 $section_style = $bg_color ? 'background-color: ' . esc_attr( $bg_color ) . ';' : '';
 
-// Inline helper — no global function to avoid "Cannot redeclare" fatal error
-// when the block appears more than once on the same page/request.
+// Inline helper — static closure avoids "Cannot redeclare" when block is used multiple times on the same page.
 $get_term_image = static function ( $term ) {
 	$tax = $term->taxonomy;
 	$tid = $term->term_id;
@@ -33,13 +32,13 @@ $get_term_image = static function ( $term ) {
 		}
 	}
 
-	// Custom meta: term_image_url (e.g. registered via block REST field)
+	// Custom meta: term_image_url
 	$url = get_term_meta( $tid, 'term_image_url', true );
 	if ( $url ) {
 		return esc_url( $url );
 	}
 
-	// WooCommerce / most taxonomy image plugins store the attachment ID in 'thumbnail_id'
+	// WooCommerce / taxonomy image plugins store attachment ID in 'thumbnail_id'
 	$thumb_id = get_term_meta( $tid, 'thumbnail_id', true );
 	if ( $thumb_id ) {
 		$src = wp_get_attachment_image_url( absint( $thumb_id ), 'large' );
@@ -86,6 +85,8 @@ if ( ! $main_term ) {
 $main_img  = $get_term_image( $main_term );
 $main_link = esc_url( get_term_link( $main_term ) );
 $main_name = esc_html( $main_term->name );
+
+$container_class = $is_full_width ? '' : 'max-w-screen-2xl mx-auto';
 ?>
 
 <section <?php echo get_block_wrapper_attributes( [
@@ -93,45 +94,71 @@ $main_name = esc_html( $main_term->name );
 	'style' => $section_style,
 ] ); ?>>
 
-	<div class="<?php echo $is_full_width ? '' : 'max-w-screen-2xl mx-auto'; ?> px-8 py-16">
+	<div class="<?php echo esc_attr( $container_class ); ?> px-8 mb-32">
 
-		<div class="block-bento-room__grid">
+		<div class="grid grid-cols-12 grid-rows-2 gap-8 bento-room-grid">
 
-			<?php /* ── Main Panel ── */ ?>
-			<a href="<?php echo $main_link; ?>" class="block-bento-room__main group">
+			<?php /* ── Main Panel (8 cols / 2 rows) ── */ ?>
+			<a href="<?php echo $main_link; ?>" class="col-span-12 lg:col-span-8 row-span-2 relative rounded-2xl overflow-hidden group block">
 				<?php if ( $main_img ) : ?>
-					<img src="<?php echo $main_img; ?>" alt="<?php echo $main_name; ?>" class="block-bento-room__img" loading="eager" />
+					<img
+						src="<?php echo $main_img; ?>"
+						alt="<?php echo $main_name; ?>"
+						class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+						loading="eager"
+					/>
 				<?php else : ?>
-					<div class="block-bento-room__img-placeholder">🏠</div>
+					<div class="w-full h-full flex items-center justify-center text-6xl bg-stone-100">🏠</div>
 				<?php endif; ?>
-				<div class="block-bento-room__overlay"></div>
-				<div class="block-bento-room__main-content">
+
+				<div class="absolute inset-0 bg-stone-900/20 group-hover:bg-stone-900/40 transition-colors duration-500"></div>
+
+				<div class="absolute bottom-16 left-16">
 					<?php if ( $curation_label ) : ?>
-						<span class="block-bento-room__curation"><?php echo $curation_label; ?></span>
+						<span class="font-label text-xs uppercase tracking-widest text-white mb-2 block">
+							<?php echo esc_html( $curation_label ); ?>
+						</span>
 					<?php endif; ?>
-					<h2 class="block-bento-room__main-title"><?php echo $main_name; ?></h2>
+
+					<h2 class="font-headline text-6xl font-bold text-white mb-8">
+						<?php echo $main_name; ?>
+					</h2>
+
 					<?php if ( $cta_text ) : ?>
-						<span class="block-bento-room__cta"><?php echo $cta_text; ?></span>
+						<span class="bg-white text-stone-900 px-8 py-4 rounded-full font-label text-xs uppercase tracking-widest hover:bg-stone-100 transition-all inline-block">
+							<?php echo esc_html( $cta_text ); ?>
+						</span>
 					<?php endif; ?>
 				</div>
 			</a>
 
-			<?php /* ── Small Panels ── */ ?>
+			<?php /* ── Small Panels (4 cols / 1 row each) ── */ ?>
 			<?php foreach ( $small_terms as $small ) :
 				$s_img  = $get_term_image( $small );
 				$s_link = esc_url( get_term_link( $small ) );
 				$s_name = esc_html( $small->name );
 			?>
-				<a href="<?php echo $s_link; ?>" class="block-bento-room__small group">
+				<a href="<?php echo $s_link; ?>" class="col-span-12 lg:col-span-4 row-span-1 relative rounded-2xl overflow-hidden group block">
 					<?php if ( $s_img ) : ?>
-						<img src="<?php echo $s_img; ?>" alt="<?php echo $s_name; ?>" class="block-bento-room__img" loading="lazy" />
+						<img
+							src="<?php echo $s_img; ?>"
+							alt="<?php echo $s_name; ?>"
+							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+							loading="lazy"
+						/>
 					<?php else : ?>
-						<div class="block-bento-room__img-placeholder">🛋</div>
+						<div class="w-full h-full flex items-center justify-center text-5xl bg-stone-100">🛋</div>
 					<?php endif; ?>
-					<div class="block-bento-room__overlay block-bento-room__overlay--light"></div>
-					<div class="block-bento-room__small-content">
-						<h3 class="block-bento-room__small-title"><?php echo $s_name; ?></h3>
-						<span class="block-bento-room__explore"><?php esc_html_e( 'Explore Collections', 'laca' ); ?></span>
+
+					<div class="absolute inset-0 bg-stone-900/10"></div>
+
+					<div class="absolute inset-0 flex flex-col justify-center items-center text-center p-8">
+						<h3 class="font-headline text-3xl font-bold text-white mb-4">
+							<?php echo $s_name; ?>
+						</h3>
+						<span class="font-label text-xs uppercase tracking-widest text-white border-b border-white pb-1">
+							<?php esc_html_e( 'Explore Collections', 'laca' ); ?>
+						</span>
 					</div>
 				</a>
 			<?php endforeach; ?>

@@ -4,7 +4,9 @@ import {
 	RichText,
 	InspectorControls,
 	PanelColorSettings,
+	useBlockEditContext,
 } from '@wordpress/block-editor';
+import previewImage from './preview.png';
 import {
 	PanelBody,
 	TextControl,
@@ -194,6 +196,22 @@ function TermPanel( { term, isMain, curationLabel, setCurationLabel, ctaText, se
 // ── Main Component ───────────────────────────────────────────────────────────
 export default function Edit( { attributes, setAttributes } ) {
 	const { postType, taxonomy, termIds, mainTermId, curationLabel, ctaText, backgroundColor, isFullWidth } = attributes;
+
+	// ── Block Preview (Inserter hover) ───────────────────────────────────────
+	// Dual-detect: WP 6.3+ context API → fallback via attributes.__isPreview
+	const { __unstableIsPreviewMode } = useBlockEditContext();
+	const isPreview = ( __unstableIsPreviewMode ?? false ) || ( attributes.__isPreview ?? false );
+	if ( isPreview ) {
+		return (
+			<div style={ { width: '100%', lineHeight: 0 } }>
+				<img
+					src={ previewImage }
+					alt={ __( 'Bento Room Gallery Preview', 'laca' ) }
+					style={ { width: '100%', height: 'auto', display: 'block' } }
+				/>
+			</div>
+		);
+	}
 
 	// ── Fetch post types ─────────────────────────────────────────────────────
 	const [ postTypes, setPostTypes ] = useState( [] );

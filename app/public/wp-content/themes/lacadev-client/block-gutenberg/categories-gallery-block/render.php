@@ -67,18 +67,18 @@ if ( is_wp_error( $terms ) ) {
 }
 ?>
 
-<section <?php echo get_block_wrapper_attributes( [
-	'class' => 'block-categories-gallery',
-	'style' => $section_style,
-] ); ?>>
+<section <?php echo get_block_wrapper_attributes( [ 'class' => 'block-categories-gallery' ] ); ?>>
+	<?php if ( $section_style ) : ?>
+	<style>.wp-block-lacadev-categories-gallery-block { <?php echo esc_attr( $section_style ); ?> }</style>
+	<?php endif; ?>
 
-	<div class="<?php echo $is_full_width ? '' : 'max-w-screen-2xl mx-auto'; ?> px-8 py-32">
+	<div class="<?php echo $is_full_width ? 'w-full' : 'max-w-screen-2xl mx-auto'; ?> px-8 mb-32">
 
 		<?php if ( $sub_title || $title ) : ?>
 			<div class="flex items-end justify-between mb-12">
 				<div>
 					<?php if ( $sub_title ) : ?>
-						<span class="block text-xs font-semibold tracking-widest uppercase text-on-surface-variant mb-2">
+						<span class="font-label text-xs uppercase tracking-widest text-secondary font-bold mb-2 block">
 							<?php echo $sub_title; ?>
 						</span>
 					<?php endif; ?>
@@ -88,7 +88,7 @@ if ( is_wp_error( $terms ) ) {
 				</div>
 				<?php if ( $browse_all_text ) : ?>
 					<a href="<?php echo $browse_all_url ?: '#'; ?>"
-					   class="text-xs font-medium tracking-widest uppercase text-on-surface-variant border-b border-outline-variant pb-1 hover:text-on-surface transition-colors whitespace-nowrap">
+					   class="font-label text-xs uppercase tracking-widest text-on-surface-variant border-b border-outline-variant pb-1 hover:text-on-surface transition-colors">
 						<?php echo $browse_all_text; ?>
 					</a>
 				<?php endif; ?>
@@ -96,7 +96,7 @@ if ( is_wp_error( $terms ) ) {
 		<?php endif; ?>
 
 		<?php if ( ! empty( $terms ) ) : ?>
-			<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
+			<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
 				<?php foreach ( $terms as $term ) :
 					$link  = esc_url( get_term_link( $term ) );
 					$name  = esc_html( $term->name );
@@ -117,7 +117,7 @@ if ( is_wp_error( $terms ) ) {
 							<?php endif; ?>
 						</div>
 						<p class="font-headline text-lg font-medium mb-1"><?php echo $name; ?></p>
-						<p class="text-xs font-semibold tracking-widest uppercase text-on-surface-variant">
+						<p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">
 							<?php printf( esc_html__( '%d Items', 'laca' ), $count ); ?>
 						</p>
 					</a>

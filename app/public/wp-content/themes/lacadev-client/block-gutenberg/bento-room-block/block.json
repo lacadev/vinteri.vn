@@ -43,10 +43,20 @@
     "isFullWidth": {
       "type": "boolean",
       "default": false
+    },
+    "__isPreview": {
+      "type": "boolean",
+      "default": false
     }
   },
   "supports": {
     "html": false,
     "align": ["wide", "full"]
+  },
+  "example": {
+    "viewportWidth": 800,
+    "attributes": {
+      "__isPreview": true
+    }
   }
 }
