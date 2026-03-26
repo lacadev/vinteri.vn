@@ -1,104 +1,148 @@
 <?php
-
 /**
  * Theme footer partial.
  *
  * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
- *
  * @package WPEmergeTheme
  */
 ?>
 <!-- footer -->
 <footer class="site-footer">
-    <div class="container">
-        <div class="footer-cta">
-            <p class="cta-label"><?php _e('HÃY CÙNG NHAU LA CÀ VÀ', 'laca'); ?></p>
-            <?php
-            // Lấy động URL của trang đang sử dụng template-contact.php
-            // Thử cả 2 trường hợp có và không có prefix 'theme/' tùy theo cách WP lưu meta
-            $template_path = 'theme/page_templates/template-contact.php';
-            $contact_pages = get_pages([
-                'meta_key' => '_wp_page_template',
-                'meta_value' => $template_path
-            ]);
+    <?php
+    $phone    = function_exists('getOption') ? getOption('phone_number') : '';
+    $email    = function_exists('getOption') ? getOption('email')        : '';
+    $address  = function_exists('getOption') ? getOption('address')      : '';
+    $siteName = get_bloginfo('name');
+    $siteDesc = get_bloginfo('description');
 
-            // Nếu không tìm thấy, thử tìm bản không có prefix 'theme/'
-            if (empty($contact_pages)) {
-                $contact_pages = get_pages([
-                    'meta_key' => '_wp_page_template',
-                    'meta_value' => 'page_templates/template-contact.php'
-                ]);
-            }
+    $socials = [
+        'facebook'  => ['label' => 'Facebook',  'icon' => 'fab fa-facebook-f'],
+        'twitter'   => ['label' => 'Twitter',   'icon' => 'fab fa-x-twitter'],
+        'linkedin'  => ['label' => 'LinkedIn',  'icon' => 'fab fa-linkedin-in'],
+        'instagram' => ['label' => 'Instagram', 'icon' => 'fab fa-instagram'],
+        'youtube'   => ['label' => 'YouTube',   'icon' => 'fab fa-youtube'],
+        'tiktok'    => ['label' => 'TikTok',    'icon' => 'fab fa-tiktok'],
+    ];
 
-            $contact_url = !empty($contact_pages) ? get_permalink($contact_pages[0]->ID) : home_url('/ghe-tram/');
-            ?>
-            <a href="<?php echo esc_url($contact_url); ?>" class="cta-main-link"><?php _e('viết nên hành trình mới', 'laca'); ?></a>
-        </div>
+    $benefits = [
+        [
+            'icon'  => 'fas fa-truck',
+            'title' => __('Free Shipping', 'laca'),
+            'desc'  => __('On all orders over 500k. Fast and reliable delivery nationwide.', 'laca'),
+        ],
+        [
+            'icon'  => 'fas fa-tag',
+            'title' => __('Price Promise', 'laca'),
+            'desc'  => __('We match any price. Shop with total confidence every time.', 'laca'),
+        ],
+        [
+            'icon'  => 'fas fa-shield-halved',
+            'title' => __('3 Years Warranty', 'laca'),
+            'desc'  => __('All products backed by our 3-year comprehensive warranty.', 'laca'),
+        ],
+    ];
+    ?>
 
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4 class="footer-title"><?php _e('Ping tôi', 'laca'); ?></h4>
-                <?php 
-                $phone = getOption('phone_number');
-                $email = getOption('email');
-                ?>
-                <div class="footer-content">
-                    <?php if ($phone) : ?>
-                        <p><a href="tel:<?php echo esc_attr(str_replace(['.', ' '], '', $phone)); ?>"><?php echo esc_html($phone); ?></a></p>
-                    <?php endif; ?>
-                    <?php if ($email) : ?>
-                        <p><a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></p>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <div class="footer-col">
-                <h4 class="footer-title"><?php _e('Điểm dừng', 'laca'); ?></h4>
-                <nav class="footer-nav">
-                    <?php
-                    wp_nav_menu([
-                        'menu' => 'footer-menu',
-                        'theme_location' => 'footer-menu',
-                        'container' => false,
-                        'fallback_cb' => false,
-                        'menu_class' => 'footer-links',
-                    ]);
-                    ?>
-                </nav>
-            </div>
-
-            <div class="footer-col">
-                <h4 class="footer-title"><?php _e('Gặp tôi tại', 'laca'); ?></h4>
-                <?php 
-                $socials = [
-                    'facebook'  => 'Facebook',
-                    'linkedin'  => 'LinkedIn',
-                    'instagram' => 'Instagram',
-                    'tiktok'    => 'TikTok',
-                    'youtube'   => 'YouTube',
-                ];
-                ?>
-                <div class="footer-socials">
-                    <?php foreach ($socials as $key => $label) : 
-                        $url = getOption($key);
-                        if ($url) : ?>
-                            <a href="<?php echo esc_url($url); ?>" target="_blank" rel="nofollow" class="social-link"><?php echo esc_html($label); ?></a>
-                        <?php endif;
-                    endforeach; ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <div class="footer-copyright">
-                &copy; <?php echo date('Y'); ?> La Cà Dev. All rights reserved.
-            </div>
-            <div class="footer-legal">
-                <a href="#"><?php _e('Chính sách bảo mật', 'laca'); ?></a>
-                <a href="#"><?php _e('Điều khoản sử dụng', 'laca'); ?></a>
+    <!-- Benefits strip -->
+    <div class="footer__benefits">
+        <div class="container">
+            <div class="footer__benefits-grid">
+                <?php foreach ($benefits as $b) : ?>
+                    <div class="footer__benefit">
+                        <div class="footer__benefit-icon">
+                            <i class="<?php echo esc_attr($b['icon']); ?>" aria-hidden="true"></i>
+                        </div>
+                        <div class="footer__benefit-body">
+                            <h4 class="footer__benefit-title"><?php echo esc_html($b['title']); ?></h4>
+                            <p class="footer__benefit-desc"><?php echo esc_html($b['desc']); ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
+
+    <!-- Main area: logo, social, tagline, contact -->
+    <div class="footer__main">
+        <div class="container">
+
+            <!-- Logo -->
+            <div class="footer__brand">
+                <a href="<?php echo esc_url(home_url('/')); ?>" class="footer__logo">
+                    <?php echo esc_html($siteName); ?>
+                </a>
+            </div>
+
+            <!-- Social icons -->
+            <?php
+            $has_social = false;
+            foreach ($socials as $key => $s) {
+                if (function_exists('getOption') && getOption($key)) { $has_social = true; break; }
+            }
+            if ($has_social) : ?>
+            <nav class="footer__socials" aria-label="<?php esc_attr_e('Social media', 'laca'); ?>">
+                <?php foreach ($socials as $key => $s) :
+                    $url = function_exists('getOption') ? getOption($key) : '';
+                    if ($url) : ?>
+                        <a class="footer__social-link"
+                           href="<?php echo esc_url($url); ?>"
+                           target="_blank"
+                           rel="noopener noreferrer nofollow"
+                           aria-label="<?php echo esc_attr($s['label']); ?>">
+                            <i class="<?php echo esc_attr($s['icon']); ?>" aria-hidden="true"></i>
+                        </a>
+                    <?php endif;
+                endforeach; ?>
+            </nav>
+            <?php endif; ?>
+
+            <!-- Tagline -->
+            <?php if ($siteDesc) : ?>
+                <p class="footer__tagline"><?php echo esc_html($siteDesc); ?></p>
+            <?php endif; ?>
+
+            <!-- Contact row -->
+            <?php if ($address || $phone || $email) : ?>
+            <div class="footer__contact">
+                <?php if ($address) : ?>
+                    <div class="footer__contact-item">
+                        <i class="fas fa-location-dot" aria-hidden="true"></i>
+                        <span><?php echo esc_html($address); ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if ($phone) : ?>
+                    <div class="footer__contact-item">
+                        <i class="fas fa-phone" aria-hidden="true"></i>
+                        <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $phone)); ?>">
+                            <?php echo esc_html($phone); ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
+                <?php if ($email) : ?>
+                    <div class="footer__contact-item">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <a href="mailto:<?php echo esc_attr($email); ?>">
+                            <?php echo esc_html($email); ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+
+        </div>
+    </div>
+
+    <!-- Copyright bar -->
+    <div class="footer__bottom">
+        <div class="container">
+            <p class="footer__copyright">
+                &copy; <?php echo esc_html(date('Y')); ?>
+                <?php echo esc_html($siteName); ?>.
+                <?php esc_html_e('All rights reserved.', 'laca'); ?>
+            </p>
+        </div>
+    </div>
+
 </footer>
 <!-- footer end -->
 
