@@ -1,0 +1,79 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "1.0.0",
+  "name": "lacadev/hero-block",
+  "title": "Hero Section",
+  "description": "Hero section với text bên trái và ảnh sản phẩm bên phải theo layout editorial",
+  "category": "lacadev-blocks",
+  "icon": "cover-image",
+  "editorScript": "lacadev-block-hero-block-editor",
+  "style": "lacadev-block-hero-block",
+  "keywords": ["hero", "banner", "featured", "section", "editorial"],
+  "textdomain": "laca",
+  "attributes": {
+    "subTitle": {
+      "type": "string",
+      "default": "New Season Collection"
+    },
+    "title": {
+      "type": "string",
+      "default": "The Arlow Lounge"
+    },
+    "titleItalic": {
+      "type": "string",
+      "default": "Lounge"
+    },
+    "description": {
+      "type": "string",
+      "default": "A sculptural masterpiece defined by its fluid silhouette and premium bouclé texture. Designed for the art of lingering."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Shop The Piece"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "containerLayout": {
+      "type": "string",
+      "default": "container"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "__isPreview": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "example": {
+    "viewportWidth": 800,
+    "attributes": {
+      "subTitle": "New Season Collection",
+      "title": "The Arlow",
+      "titleItalic": "Lounge",
+      "description": "A sculptural masterpiece defined by its fluid silhouette and premium bouclé texture.",
+      "buttonText": "Shop The Piece",
+      "__isPreview": true
+    }
+  }
+}

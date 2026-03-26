@@ -1,0 +1,35 @@
+// Path từ block-gutenberg/promo-products-block/style.scss
+@use "../../resources/styles/theme/abstracts/variables" as *;
+@use "../../resources/styles/theme/abstracts/mixin" as *;
+
+// -- MD3 surface token fallback (in case Tailwind hasn't generated these classes) --
+.bg-surface-container-low {
+    background-color: var(--color-surface-container-low, #F5F5F5) !important;
+}
+
+.text-on-surface-variant {
+    color: var(--color-on-surface-variant, #49454F) !important;
+}
+
+.text-on-surface {
+    color: var(--color-on-surface, #1C1B1F) !important;
+}
+
+.block-promo-products {
+    // Tailwind handles most styles.
+    // Only custom overrides here.
+
+    .promo-card-img {
+        // mix-blend-multiply on product images
+        mix-blend-mode: multiply;
+    }
+
+    .promo-grid {
+        height: auto;
+
+        @media (min-width: 48rem) {
+            height: 50rem; // 800px → rem
+        }
+    }
+}
+

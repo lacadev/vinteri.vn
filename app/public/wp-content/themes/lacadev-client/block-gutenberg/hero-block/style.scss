@@ -1,0 +1,55 @@
+@use "../../resources/styles/theme/abstracts/variables" as *;
+@use "../../resources/styles/theme/abstracts/mixin" as *;
+
+.wp-block-lacadev-hero-block {
+    // Chiều cao tối thiểu cho hero section
+    .hero-section {
+        min-height: clamp(30rem, 80vw, 57.5rem);
+    }
+
+    // Ảnh hero — hover scale
+    .hero-image-wrapper {
+        height: clamp(20rem, 50vw, 51.1875rem);
+
+        img {
+            transition: transform 0.7s ease;
+        }
+
+        &:hover img {
+            transform: scale(1.05);
+        }
+    }
+
+    // Button — dùng $primaryColor của theme thay vì bg-primary Tailwind (MD3 purple)
+    .hero-btn {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background-color: $primaryColor;
+        color: #fff;
+        border-radius: 9999px;
+        font-family: $primaryFont;
+        letter-spacing: 0.05em;
+        transition: opacity 0.2s ease, transform 0.1s ease;
+        text-decoration: none;
+
+        &:hover {
+            opacity: 0.85;
+            color: #fff;
+        }
+
+        &:active {
+            transform: scale(0.97);
+        }
+    }
+
+    // Responsive: mobile
+    @include maxWidth($sm) {
+        .hero-section {
+            min-height: auto;
+        }
+
+        .hero-image-wrapper {
+            height: clamp(18rem, 70vw, 25rem);
+        }
+    }
+}

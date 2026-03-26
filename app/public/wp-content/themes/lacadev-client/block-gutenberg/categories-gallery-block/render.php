@@ -118,7 +118,7 @@ if ( is_wp_error( $terms ) ) {
 						</div>
 						<p class="font-headline text-lg font-medium mb-1"><?php echo $name; ?></p>
 						<p class="font-label text-xs uppercase tracking-widest text-on-surface-variant">
-							<?php printf( esc_html__( '%d Items', 'laca' ), $count ); ?>
+							<?php printf( esc_html__( '%d sản phẩm', 'laca' ), $count ); ?>
 						</p>
 					</a>
 				<?php endforeach; ?>

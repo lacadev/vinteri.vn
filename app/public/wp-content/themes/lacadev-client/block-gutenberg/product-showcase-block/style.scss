@@ -1,0 +1,22 @@
+// style.scss — Product Showcase Block
+// Tailwind-first: chỉ thêm SCSS khi Tailwind không đủ.
+@use "../../resources/styles/theme/abstracts/variables" as *;
+@use "../../resources/styles/theme/abstracts/mixin" as *;
+
+.product-showcase-block {
+	// Price styling từ WooCommerce
+	.woocommerce-Price-amount {
+		font-family: $primaryFont;
+	}
+
+	// Sale price
+	del .woocommerce-Price-amount {
+		opacity: 0.5;
+		margin-right: 0.25rem;
+	}
+
+	ins .woocommerce-Price-amount {
+		color: var(--color-error, #d32f2f);
+		text-decoration: none;
+	}
+}

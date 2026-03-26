@@ -1,0 +1,80 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "1.0.0",
+  "name": "lacadev/product-showcase-block",
+  "title": "Product Showcase — Grid",
+  "description": "Hiển thị sản phẩm WooCommerce dạng grid. Hỗ trợ chế độ Thủ công (chọn từng sản phẩm) và Tự động (theo danh mục, thứ tự, số lượng).",
+  "category": "lacadev-blocks",
+  "icon": "products",
+  "editorScript": "lacadev-block-product-showcase-block-editor",
+  "style": "lacadev-block-product-showcase-block",
+  "keywords": ["product", "sản phẩm", "woocommerce", "showcase", "grid", "shop"],
+  "textdomain": "laca",
+  "attributes": {
+    "mode": {
+      "type": "string",
+      "default": "auto",
+      "enum": ["auto", "manual"]
+    },
+    "numberOfProducts": {
+      "type": "number",
+      "default": 4
+    },
+    "columns": {
+      "type": "number",
+      "default": 4
+    },
+    "sectionTitle": {
+      "type": "string",
+      "default": "New Trending Pieces"
+    },
+    "viewAllText": {
+      "type": "string",
+      "default": "View Full Collection"
+    },
+    "viewAllUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "showViewAll": {
+      "type": "boolean",
+      "default": true
+    },
+    "autoOrderby": {
+      "type": "string",
+      "default": "date"
+    },
+    "autoCategoryId": {
+      "type": "number",
+      "default": 0
+    },
+    "manualProductIds": {
+      "type": "array",
+      "default": [],
+      "items": { "type": "number" }
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "containerLayout": {
+      "type": "string",
+      "default": "container"
+    },
+    "__isPreview": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "example": {
+    "viewportWidth": 800,
+    "attributes": {
+      "__isPreview": true
+    }
+  }
+}

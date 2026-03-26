@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "1.0.0",
+  "name": "lacadev/promo-products-block",
+  "title": "Promo Products — Editorial Layout",
+  "description": "Hiển thị danh mục sản phẩm WooCommerce dạng editorial promo: 1 featured large + 1 top promo + N small cards. Cho phép chọn số lượng danh mục và thứ tự.",
+  "category": "lacadev-blocks",
+  "icon": "category",
+  "editorScript": "lacadev-block-promo-products-block-editor",
+  "style": "lacadev-block-promo-products-block",
+  "keywords": ["promo", "category", "danh mục", "woocommerce", "editorial", "featured", "shop"],
+  "textdomain": "laca",
+  "attributes": {
+    "featuredCtaText": {
+      "type": "string",
+      "default": "Shop Now"
+    },
+    "promoCtaText": {
+      "type": "string",
+      "default": "Shop Now"
+    },
+    "numberOfCategories": {
+      "type": "number",
+      "default": 4
+    },
+    "orderby": {
+      "type": "string",
+      "default": "count"
+    },
+    "hideEmpty": {
+      "type": "boolean",
+      "default": true
+    },
+    "parentCategoryId": {
+      "type": "number",
+      "default": 0
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "containerLayout": {
+      "type": "string",
+      "default": "container"
+    },
+    "__isPreview": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "example": {
+    "viewportWidth": 800,
+    "attributes": {
+      "__isPreview": true
+    }
+  }
+}
