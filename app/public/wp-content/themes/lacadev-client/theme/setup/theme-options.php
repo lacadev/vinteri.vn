@@ -62,6 +62,25 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 			->set_attribute('placeholder', 'zalo'),
 	])
 
+	->add_tab(__('Footer | Chân trang', 'laca'), [
+		Field::make('html', 'footer_benefits_info', __('', 'laca'))
+			->set_html('<p style="color:#666;margin:0 0 8px"><strong>Benefits Strip</strong> — Tối đa 3 mục. Mỗi mục gồm icon SVG, tiêu đề và mô tả ngắn hiển thị ở đầu footer.</p>'),
+
+		Field::make('complex', 'footer_benefits', __('Benefits | Lợi ích', 'laca'))
+			->set_layout('tabbed-vertical')
+			->set_max(3)
+			->set_collapsed(true)
+			->add_fields([
+				Field::make('textarea', 'icon_svg', __('Icon SVG', 'laca'))
+					->set_rows(4)
+					->set_help_text('Paste mã SVG inline vào đây (bắt đầu bằng &lt;svg ...&gt;). W/H nên để 24×24.'),
+				Field::make('text', 'title', __('Tiêu đề', 'laca'))
+					->set_attribute('placeholder', 'ví dụ: Free Shipping'),
+				Field::make('text', 'description', __('Mô tả ngắn', 'laca'))
+					->set_attribute('placeholder', 'ví dụ: Miễn phí vận chuyển cho đơn hàng trên 500k'),
+			]),
+	])
+
 	->add_tab(__('Scripts', 'laca'), [
 		Field::make('header_scripts', 'crb_header_script', __('Header Script', 'laca')),
 		Field::make('footer_scripts', 'crb_footer_script', __('Footer Script', 'laca')),

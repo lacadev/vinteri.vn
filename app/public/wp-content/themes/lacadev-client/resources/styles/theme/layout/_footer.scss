@@ -60,9 +60,11 @@ $footer-accent:       rgba(255, 255, 255, 0.9);
         border-radius: 50%;
         background-color: rgba(255, 255, 255, 0.08);
 
-        i {
-            font-size: 1.25rem;
+        svg {
+            width: 1.5rem;
+            height: 1.5rem;
             color: $footer-accent;
+            display: block;
         }
     }
 
@@ -142,9 +144,12 @@ $footer-accent:       rgba(255, 255, 255, 0.9);
     text-decoration: none;
     transition: color 0.2s ease, background-color 0.2s ease;
 
-    i {
-        font-size: 0.9375rem;
+    svg {
+        width: 1.125rem;
+        height: 1.125rem;
+        display: block;
         pointer-events: none;
+        flex-shrink: 0;
     }
 
     &:hover,
@@ -186,10 +191,16 @@ $footer-accent:       rgba(255, 255, 255, 0.9);
         font-size: 0.8125rem;
         color: $footer-text-muted;
 
-        i {
-            font-size: 0.875rem;
-            color: $footer-text;
+        svg, .footer__contact-svg {
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            color: $footer-text;
+
+            svg {
+                width: 1rem;
+                height: 1rem;
+            }
         }
 
         a {
