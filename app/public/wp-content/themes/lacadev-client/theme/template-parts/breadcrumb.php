@@ -1,7 +1,3 @@
-<?php
-$banner = getPostThumbnailUrl(get_the_ID());
-$title = getPageTitle();
-?>
 <div class="breadcumb">
 	<div class="container">
 		<?php

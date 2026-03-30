@@ -9,21 +9,8 @@
  * @package WPEmergeTheme
  */
 ?>
-<?php
-if (!is_front_page() && is_page()):
-    echo get_template_part('template-parts/breadcrumb');
-endif;
-
-if (is_front_page()):
-    the_content();
-else:
-    ?>
-		<?php get_template_part('template-parts/page-hero'); ?>
-		<div class="wrapper-content">
-			<?php
-			the_content();
-			?>
-		</div>
-    <?php
-endif;
-?>
+<div class="wrapper-content">
+	<?php
+	the_content();
+	?>
+</div>

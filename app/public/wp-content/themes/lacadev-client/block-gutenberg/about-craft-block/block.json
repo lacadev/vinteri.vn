@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "1.0.0",
+  "name": "lacadev/about-craft-block",
+  "title": "About — Foundation of Craft",
+  "description": "Section ảnh editorial (4/5) + glass card + text giới thiệu triết lý thương hiệu",
+  "category": "lacadev-blocks",
+  "icon": "art",
+  "editorScript": "lacadev-block-about-craft-block-editor",
+  "style": "lacadev-block-about-craft-block",
+  "keywords": ["about", "craft", "foundation", "editorial", "giới thiệu", "thương hiệu"],
+  "textdomain": "laca",
+  "attributes": {
+    "sectionLabel": {
+      "type": "string",
+      "default": "SPECIFICATION 01"
+    },
+    "specText": {
+      "type": "string",
+      "default": "Sustainable Walnut sourced from managed European forests."
+    },
+    "heading": {
+      "type": "string",
+      "default": "The Foundation of Craft"
+    },
+    "paragraph1": {
+      "type": "string",
+      "default": "At CURATED, we believe that furniture is the architecture of the internal landscape. Our process begins with the raw material, honoring the soul of wood, the strength of stone, and the tactility of leather."
+    },
+    "paragraph2": {
+      "type": "string",
+      "default": "Every piece is a testament to the intersection of modern technology and ancestral hands. We partner with multi-generational workshops where the \"Standard of Excellence\" is not a goal, but a heritage."
+    },
+    "ctaText": {
+      "type": "string",
+      "default": "VIEW THE PROCESS"
+    },
+    "ctaUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "containerLayout": {
+      "type": "string",
+      "default": "container"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "__isPreview": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "example": {
+    "viewportWidth": 800,
+    "attributes": {
+      "__isPreview": true
+    }
+  }
+}

@@ -1,0 +1,8 @@
+// Block: About Quote CTA Block
+// Minimal — almost all styling is via Tailwind utilities in render.php
+
+.about-quote-cta-block {
+    &__quote blockquote {
+        font-size: clamp(1.3rem, 3vw, 2.2rem);
+    }
+}

@@ -1,0 +1,32 @@
+// Block: About Craft Block
+// Custom CSS for glass card backdrop-filter (Tailwind v3 safelist may not include)
+
+.about-craft-block {
+    &__image-col {
+        // Add extra padding-bottom on mobile for glass card overflow
+        @media (max-width: 767px) {
+            padding-bottom: 4rem;
+        }
+    }
+
+    &__glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(175, 179, 176, 0.3);
+        box-shadow: 0 20px 40px rgba(47, 51, 49, 0.12);
+
+        // On mobile, position normally (not absolute)
+        @media (max-width: 767px) {
+            position: relative;
+            bottom: auto;
+            right: auto;
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+    }
+
+    &__heading {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+    }
+}

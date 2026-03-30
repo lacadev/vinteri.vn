@@ -1,0 +1,43 @@
+// Block: About Hero Block
+// Custom CSS for styles that Tailwind cannot handle inline
+
+.about-hero-block {
+    padding: 0;
+
+    &__inner {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: clamp(480px, 76.75vw, 1228px);
+        overflow: hidden;
+    }
+
+    &__bg {
+        position: absolute;
+        inset: 0;
+    }
+
+    &__bg-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+    }
+
+    &__content {
+        position: relative;
+        z-index: 10;
+        padding-top: 5rem;
+        padding-bottom: 5rem;
+        color: #fff;
+    }
+
+    &__heading {
+        font-size: clamp(2.5rem, 6vw, 5.5rem);
+    }
+}

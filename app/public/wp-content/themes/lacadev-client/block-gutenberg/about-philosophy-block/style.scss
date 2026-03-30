@@ -1,0 +1,17 @@
+// Block: About Philosophy Block — Bento Grid
+
+.about-philosophy-block {
+    &__bento1,
+    &__bento2,
+    &__bento3 {
+        @media (max-width: 768px) {
+            grid-column: span 1;
+        }
+    }
+
+    &__bento4 {
+        @media (max-width: 768px) {
+            grid-column: span 1;
+        }
+    }
+}

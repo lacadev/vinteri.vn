@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "1.0.0",
+  "name": "lacadev/about-quote-cta-block",
+  "title": "About — Quote & CTA",
+  "description": "Section trích dẫn lớn (blockquote) kết hợp CTA call-to-action theo phong cách editorial",
+  "category": "lacadev-blocks",
+  "icon": "format-quote",
+  "editorScript": "lacadev-block-about-quote-cta-block-editor",
+  "style": "lacadev-block-about-quote-cta-block",
+  "keywords": ["about", "quote", "cta", "blockquote", "call to action"],
+  "textdomain": "laca",
+  "attributes": {
+    "quoteText": {
+      "type": "string",
+      "default": "\"Design is not for philosophy, it's for life. A beautiful object should serve the human spirit as much as it serves the body.\""
+    },
+    "quoteAuthor": {
+      "type": "string",
+      "default": "ELARA VANCE — FOUNDER"
+    },
+    "ctaHeading": {
+      "type": "string",
+      "default": "Begin Your Collection"
+    },
+    "ctaSubtext": {
+      "type": "string",
+      "default": "Experience the editorial touch in your own space."
+    },
+    "ctaButtonText": {
+      "type": "string",
+      "default": "EXPLORE THE GALLERY"
+    },
+    "ctaButtonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "containerLayout": {
+      "type": "string",
+      "default": "container"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "__isPreview": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "example": {
+    "viewportWidth": 800,
+    "attributes": {
+      "__isPreview": true
+    }
+  }
+}

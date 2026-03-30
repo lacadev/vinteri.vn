@@ -1,0 +1,94 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "1.0.0",
+  "name": "lacadev/about-philosophy-block",
+  "title": "About — Philosophy Bento",
+  "description": "Bento grid 4 ô thể hiện triết lý thương hiệu (2 lớn + 2 nhỏ, 12-col)",
+  "category": "lacadev-blocks",
+  "icon": "layout",
+  "editorScript": "lacadev-block-about-philosophy-block-editor",
+  "style": "lacadev-block-about-philosophy-block",
+  "keywords": ["about", "philosophy", "bento", "grid", "triết lý"],
+  "textdomain": "laca",
+  "attributes": {
+    "sectionTitle": {
+      "type": "string",
+      "default": "Our Philosophy"
+    },
+    "item1Title": {
+      "type": "string",
+      "default": "Intentional Solitude"
+    },
+    "item1Text": {
+      "type": "string",
+      "default": "We create pieces that demand presence without creating noise. A chair is not just for sitting; it is a dedicated space for thought, a sculptural silence in a chaotic world."
+    },
+    "item1ImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "item1ImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "item1ImageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "item2Title": {
+      "type": "string",
+      "default": "Timeless Durability"
+    },
+    "item2Text": {
+      "type": "string",
+      "default": "Against the culture of disposability, we offer permanence. Our furniture is designed to age, to patina, and to be passed down through generations."
+    },
+    "item3Title": {
+      "type": "string",
+      "default": "Material Truth"
+    },
+    "item3Text": {
+      "type": "string",
+      "default": "No veneers. No shortcuts. If it looks like stone, it is solid marble. If it looks like wood, it is solid oak."
+    },
+    "item4Title": {
+      "type": "string",
+      "default": "Domestic Architecture"
+    },
+    "item4ImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "item4ImageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "item4ImageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "containerLayout": {
+      "type": "string",
+      "default": "container"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "__isPreview": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "example": {
+    "viewportWidth": 800,
+    "attributes": {
+      "__isPreview": true
+    }
+  }
+}

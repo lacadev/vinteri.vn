@@ -10,6 +10,10 @@
 body.wp-admin {
   background: var(--bg-color-ad, #f0f0f1);
   font-family: $secondaryFont !important;
+  
+  h1 {
+    line-height: 2em !important;
+  }
 }
 
 // ─── Admin Bar ───────────────────────────────────────────────
@@ -24,6 +28,7 @@ body.wp-admin {
   .ab-icon::before,
   a.ab-item,
   div.ab-item {
+    background-color: transparent !important;
     color: rgba(255, 255, 255, 0.82) !important;
   }
 

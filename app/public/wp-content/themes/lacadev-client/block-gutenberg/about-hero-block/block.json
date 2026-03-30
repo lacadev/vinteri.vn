@@ -1,0 +1,74 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "1.0.0",
+  "name": "lacadev/about-hero-block",
+  "title": "About — Hero Section",
+  "description": "Hero section fullscreen với ảnh nền, overlay và text giới thiệu theo phong cách editorial",
+  "category": "lacadev-blocks",
+  "icon": "cover-image",
+  "editorScript": "lacadev-block-about-hero-block-editor",
+  "style": "lacadev-block-about-hero-block",
+  "keywords": ["about", "hero", "fullscreen", "giới thiệu", "banner"],
+  "textdomain": "laca",
+  "attributes": {
+    "subTitle": {
+      "type": "string",
+      "default": "ESTABLISHED 2024"
+    },
+    "title": {
+      "type": "string",
+      "default": "The Art of"
+    },
+    "titleItalic": {
+      "type": "string",
+      "default": "Curation"
+    },
+    "description": {
+      "type": "string",
+      "default": "A bridge between architectural precision and domestic comfort. We don't just furnish spaces; we orchestrate experiences."
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "overlayOpacity": {
+      "type": "number",
+      "default": 10
+    },
+    "containerLayout": {
+      "type": "string",
+      "default": "container"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "__isPreview": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "example": {
+    "viewportWidth": 800,
+    "attributes": {
+      "subTitle": "ESTABLISHED 2024",
+      "title": "The Art of",
+      "titleItalic": "Curation",
+      "description": "A bridge between architectural precision and domestic comfort.",
+      "__isPreview": true
+    }
+  }
+}
