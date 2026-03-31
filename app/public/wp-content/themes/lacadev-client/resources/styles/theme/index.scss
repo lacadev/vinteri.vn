@@ -7,6 +7,7 @@
 @use "./components/breadcumb.scss";
 @use "./components/share-post.scss";
 @use "./components/pagination.scss";
+@use "./components/product-card.scss";
 
 @use "./layout/general.scss" as *;
 @use "./layout/header.scss" as *;
@@ -15,6 +16,7 @@
 
 @use "./pages/404.scss" as *;
 @use "./pages/contact.scss" as *;
+@use "./pages/shop.scss" as *;
 
 @import "~@csstools/normalize.css";
 @import "swiper/swiper-bundle.css";

@@ -1,16 +1,8 @@
 <?php
 /**
  * The template for displaying product content within loops
+ * Editorial style - no star rating, clean minimal card
  *
- * This template can be overridden by copying it to yourtheme/woocommerce/content-product.php.
- *
- * HOWEVER, on occasion WooCommerce will need to update template files and you
- * (the theme developer) will need to copy the new files to your theme to
- * maintain compatibility. We try to do this as little as possible, but it does
- * happen. When this occurs the version of the template file will be bumped and
- * the readme will list any important changes.
- *
- * @see     https://woocommerce.com/document/template-structure/
  * @package WooCommerce\Templates
  * @version 9.4.0
  */
@@ -19,49 +11,88 @@ defined( 'ABSPATH' ) || exit;
 
 global $product;
 
-// Check if the product is a valid WooCommerce product and ensure its visibility before proceeding.
 if ( ! is_a( $product, WC_Product::class ) || ! $product->is_visible() ) {
 	return;
 }
+
+// Get product attributes for display (material, variant, etc.)
+$short_description = $product->get_short_description();
+$attributes        = $product->get_attributes();
+$attr_display      = '';
+$attr_values       = [];
+
+foreach ( $attributes as $attribute ) {
+	if ( ! $attribute->get_visible() ) {
+		continue;
+	}
+	$options = $attribute->get_options();
+	if ( ! empty( $options ) ) {
+		if ( is_array( $options ) && is_numeric( $options[0] ) ) {
+			// Taxonomy-based attribute
+			$terms = array_map( 'get_term', $options );
+			$vals  = wp_list_pluck( array_filter( $terms, function( $t ) { return $t instanceof WP_Term; } ), 'name' );
+		} else {
+			$vals = $options;
+		}
+		if ( ! empty( $vals ) ) {
+			$attr_values[] = implode( ' / ', $vals );
+		}
+	}
+}
+$attr_display = implode( ' · ', array_slice( $attr_values, 0, 2 ) );
+
+// Check if featured (used as "Editor's Pick" badge)
+$is_featured = $product->is_featured();
+
+// Product thumbnail
+$image_id   = $product->get_image_id();
+$image_src  = '';
+$image_alt  = esc_attr( $product->get_name() );
+if ( $image_id ) {
+	$image_data = wp_get_attachment_image_src( $image_id, 'woocommerce_single' );
+	if ( $image_data ) {
+		$image_src = $image_data[0];
+	}
+}
+if ( ! $image_src ) {
+	$image_src = wc_placeholder_img_src( 'woocommerce_single' );
+}
+
+$product_link = get_permalink( $product->get_id() );
 ?>
-<li <?php wc_product_class( '', $product ); ?>>
-	<?php
-	/**
-	 * Hook: woocommerce_before_shop_loop_item.
-	 *
-	 * @hooked woocommerce_template_loop_product_link_open - 10
-	 */
-	do_action( 'woocommerce_before_shop_loop_item' );
+<li <?php wc_product_class( 'product-card', $product ); ?>>
+	<a href="<?php echo esc_url( $product_link ); ?>" class="product-card__link" aria-label="<?php echo esc_attr( $product->get_name() ); ?>">
 
-	/**
-	 * Hook: woocommerce_before_shop_loop_item_title.
-	 *
-	 * @hooked woocommerce_show_product_loop_sale_flash - 10
-	 * @hooked woocommerce_template_loop_product_thumbnail - 10
-	 */
-	do_action( 'woocommerce_before_shop_loop_item_title' );
+		<?php /* Image wrapper */ ?>
+		<div class="product-card__image-wrapper">
+			<img
+				class="product-card__image"
+				src="<?php echo esc_url( $image_src ); ?>"
+				alt="<?php echo $image_alt; ?>"
+				loading="lazy"
+				decoding="async"
+			/>
 
-	/**
-	 * Hook: woocommerce_shop_loop_item_title.
-	 *
-	 * @hooked woocommerce_template_loop_product_title - 10
-	 */
-	do_action( 'woocommerce_shop_loop_item_title' );
+			<?php if ( $is_featured ) : ?>
+				<span class="product-card__badge"><?php esc_html_e( "Editor's Pick", 'lacadev-client' ); ?></span>
+			<?php endif; ?>
+		</div>
 
-	/**
-	 * Hook: woocommerce_after_shop_loop_item_title.
-	 *
-	 * @hooked woocommerce_template_loop_rating - 5
-	 * @hooked woocommerce_template_loop_price - 10
-	 */
-	do_action( 'woocommerce_after_shop_loop_item_title' );
+		<?php /* Info section */ ?>
+		<div class="product-card__info">
+			<div class="product-card__meta">
+				<h2 class="product-card__title">
+					<?php echo esc_html( $product->get_name() ); ?>
+				</h2>
+				<div class="product-card__price">
+					<?php echo $product->get_price_html(); ?>
+				</div>
+			</div>
 
-	/**
-	 * Hook: woocommerce_after_shop_loop_item.
-	 *
-	 * @hooked woocommerce_template_loop_product_link_close - 5
-	 * @hooked woocommerce_template_loop_add_to_cart - 10
-	 */
-	do_action( 'woocommerce_after_shop_loop_item' );
-	?>
+			<?php if ( $attr_display ) : ?>
+				<p class="product-card__attributes"><?php echo esc_html( $attr_display ); ?></p>
+			<?php endif; ?>
+		</div>
+
+	</a>
 </li>

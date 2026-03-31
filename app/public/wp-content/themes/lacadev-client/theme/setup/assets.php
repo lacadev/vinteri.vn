@@ -92,6 +92,17 @@ function app_action_theme_enqueue_assets()
         'isMobile' => wp_is_mobile(),
         'currentUrl' => get_permalink(),
     ]);
+
+    /**
+     * Shop page inline CSS (editorial layout)
+     */
+    if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_category() || is_product_tag() ) ) {
+        // Dequeue WC price slider script to prevent it from overriding our custom range slider
+        add_action( 'wp_enqueue_scripts', function() {
+            wp_dequeue_script( 'wc-price-slider' );
+            wp_dequeue_script( 'wc-jquery-ui-touchpunch' );
+        }, 999 );
+    }
 }
 
 /**
