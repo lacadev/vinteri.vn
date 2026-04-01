@@ -3,7 +3,7 @@
  * The template for displaying product content in the single-product.php template
  *
  * EDITORIAL SINGLE PRODUCT LAYOUT
- * Left column (7/12): Custom CSS gallery slider
+ * Left column (7/12): image gallery grid
  * Right column (5/12): sticky product info
  *
  * @package WooCommerce\Templates
@@ -38,33 +38,24 @@ $all_image_ids      = array_merge( $main_image_id ? array( $main_image_id ) : ar
 $categories         = wc_get_product_category_list( $product_id, ', ' );
 $short_description  = $product->get_short_description();
 $description        = $product->get_description();
-$image_count        = count( $all_image_ids );
 ?>
 
 <div id="product-<?php the_ID(); ?>" <?php wc_product_class( 'single-product-editorial', $product ); ?>>
 
-	<div class="container">
 	<div class="sp-layout">
 
-		<?php /* === GALLERY COLUMN - Custom CSS Slider === */ ?>
+		<?php /* === GALLERY COLUMN === */ ?>
 		<div class="sp-gallery">
 			<?php if ( ! empty( $all_image_ids ) ) : ?>
-
-				<!-- Main Image -->
-				<div class="sp-gallery__main" id="sp-gallery-main">
-					<?php foreach ( $all_image_ids as $idx => $image_id ) :
-						$image_src  = wp_get_attachment_image_url( $image_id, 'woocommerce_single' );
-						$image_full = wp_get_attachment_image_url( $image_id, 'full' );
-						$alt        = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
-						$alt        = $alt ? $alt : $product->get_name();
-					?>
-					<div class="sp-gallery__slide<?php echo $idx === 0 ? ' sp-gallery__slide--active' : ''; ?>"
-						 data-index="<?php echo esc_attr( $idx ); ?>">
-						<a href="<?php echo esc_url( $image_full ); ?>"
-						   class="sp-gallery__link"
-						   data-fancybox="product-gallery"
-						   data-no-swup
-						   data-caption="<?php echo esc_attr( $alt ); ?>">
+				<?php foreach ( $all_image_ids as $idx => $image_id ) :
+					$image_src  = wp_get_attachment_image_url( $image_id, 'woocommerce_single' );
+					$image_full = wp_get_attachment_image_url( $image_id, 'full' );
+					$alt        = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
+					$alt        = $alt ? $alt : $product->get_name();
+					$class      = ( $idx === 0 ) ? 'sp-gallery__item sp-gallery__item--main' : 'sp-gallery__item';
+				?>
+					<div class="<?php echo esc_attr( $class ); ?>">
+						<a href="<?php echo esc_url( $image_full ); ?>" class="sp-gallery__link" data-fancybox="product-gallery">
 							<img
 								src="<?php echo esc_url( $image_src ); ?>"
 								alt="<?php echo esc_attr( $alt ); ?>"
@@ -73,60 +64,30 @@ $image_count        = count( $all_image_ids );
 							/>
 						</a>
 					</div>
-					<?php endforeach; ?>
-
-					<?php if ( $image_count > 1 ) : ?>
-					<!-- Nav arrows -->
-					<button class="sp-gallery__nav sp-gallery__nav--prev" id="sp-gallery-prev" aria-label="Previous">
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
-					</button>
-					<button class="sp-gallery__nav sp-gallery__nav--next" id="sp-gallery-next" aria-label="Next">
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
-					</button>
-					<!-- Counter -->
-					<span class="sp-gallery__counter"><span id="sp-counter-current">1</span>/<?php echo esc_html( $image_count ); ?></span>
-					<?php endif; ?>
-				</div>
-
-				<?php if ( $image_count > 1 ) : ?>
-				<!-- Thumbnails -->
-				<div class="sp-gallery__thumbs" id="sp-gallery-thumbs">
-					<?php foreach ( $all_image_ids as $idx => $image_id ) :
-						$thumb_src = wp_get_attachment_image_url( $image_id, 'thumbnail' );
-						$alt       = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
-						$alt       = $alt ? $alt : $product->get_name();
-					?>
-					<button class="sp-gallery__thumb<?php echo $idx === 0 ? ' sp-gallery__thumb--active' : ''; ?>"
-							data-index="<?php echo esc_attr( $idx ); ?>"
-							aria-label="<?php echo esc_attr( $alt ); ?>">
-						<img src="<?php echo esc_url( $thumb_src ); ?>"
-							 alt="<?php echo esc_attr( $alt ); ?>"
-							 loading="lazy" />
-					</button>
-					<?php endforeach; ?>
-				</div>
-				<?php endif; ?>
-
+				<?php endforeach; ?>
 			<?php else : ?>
-				<div class="sp-gallery__main">
-					<div class="sp-gallery__slide sp-gallery__slide--active">
-						<img src="<?php echo esc_url( wc_placeholder_img_src( 'woocommerce_single' ) ); ?>"
-							alt="<?php echo esc_attr( $product->get_name() ); ?>"
-							class="sp-gallery__image" />
-					</div>
+				<div class="sp-gallery__item sp-gallery__item--main">
+					<img src="<?php echo esc_url( wc_placeholder_img_src( 'woocommerce_single' ) ); ?>"
+						alt="<?php echo esc_attr( $product->get_name() ); ?>"
+						class="sp-gallery__image" />
 				</div>
 			<?php endif; ?>
 		</div>
 
 		<?php /* === INFO COLUMN === */ ?>
 		<div class="sp-info">
+
 			<div class="sp-info__inner">
+
+			<?php /* Category label - uppercase small tracking */ ?>
 				<?php if ( $categories ) : ?>
 					<p class="sp-info__label"><?php echo wp_strip_all_tags( $categories ); // phpcs:ignore ?></p>
 				<?php endif; ?>
 
+				<?php /* Title */ ?>
 				<h1 class="sp-info__title"><?php the_title(); ?></h1>
 
+				<?php /* Short description / Description */ ?>
 				<?php if ( $short_description || $description ) : ?>
 				<div class="sp-info__description-block">
 					<h3 class="sp-info__section-label"><?php esc_html_e( 'Mô tả sản phẩm', 'lacadev-client' ); ?></h3>
@@ -136,12 +97,18 @@ $image_count        = count( $all_image_ids );
 				</div>
 				<?php endif; ?>
 
+				<?php /* Price */ ?>
 				<div class="sp-info__price">
 					<?php echo $product->get_price_html(); // phpcs:ignore ?>
 				</div>
 
+				<?php /* Add to Cart form - call specific function, no hooks */ ?>
 				<div class="sp-info__cart">
-					<?php if ( ! $product->is_in_stock() ) : ?>
+					<?php
+					// Stock status message
+					$availability = $product->get_availability();
+					if ( ! $product->is_in_stock() ) :
+					?>
 						<p class="sp-info__availability sp-info__availability--out">
 							<?php esc_html_e( 'Hết hàng', 'lacadev-client' ); ?>
 						</p>
@@ -157,6 +124,9 @@ $image_count        = count( $all_image_ids );
 					?>
 				</div>
 
+	
+
+				<?php /* Attributes specs */ ?>
 				<?php
 				$weight     = $product->get_weight();
 				$dimensions = $product->get_dimensions( false );
@@ -182,7 +152,9 @@ $image_count        = count( $all_image_ids );
 							$values = array();
 							if ( $attribute->is_taxonomy() ) {
 								$terms  = get_terms( array( 'taxonomy' => $attribute->get_name(), 'object_ids' => $product_id ) );
-								foreach ( $terms as $term ) { $values[] = $term->name; }
+								foreach ( $terms as $term ) {
+									$values[] = $term->name;
+								}
 							} else {
 								$values = $attribute->get_options();
 							}
@@ -192,10 +164,13 @@ $image_count        = count( $all_image_ids );
 						<p class="sp-info__spec-label"><?php echo esc_html( $label ); ?></p>
 						<p class="sp-info__spec-value"><?php echo esc_html( implode( ', ', $values ) ); ?></p>
 					</div>
-					<?php endif; endforeach; ?>
+					<?php
+						endif;
+					endforeach; ?>
 				</div>
 				<?php endif; ?>
 
+				<?php /* SKU + Meta */ ?>
 				<div class="sp-info__meta">
 					<?php do_action( 'woocommerce_product_meta_start' ); ?>
 					<?php if ( wc_product_sku_enabled() && ( $product->get_sku() || $product->is_type( 'variable' ) ) ) : ?>
@@ -203,15 +178,23 @@ $image_count        = count( $all_image_ids );
 					<?php endif; ?>
 					<?php do_action( 'woocommerce_product_meta_end' ); ?>
 				</div>
+
 			</div><!-- .sp-info__inner -->
 		</div><!-- .sp-info -->
 
 	</div><!-- .sp-layout -->
-	</div><!-- .container -->
 
 	<?php /* === TABS / REVIEWS / RELATED BELOW === */ ?>
-	<div class="sp-below container">
-		<?php do_action( 'woocommerce_after_single_product_summary' ); ?>
+	<div class="sp-below">
+		<?php
+		/**
+		 * Hook: woocommerce_after_single_product_summary.
+		 * @hooked woocommerce_output_product_data_tabs - 10
+		 * @hooked woocommerce_upsell_display          - 15
+		 * @hooked woocommerce_output_related_products - 20
+		 */
+		do_action( 'woocommerce_after_single_product_summary' );
+		?>
 	</div>
 
 </div><!-- #product-xxx -->

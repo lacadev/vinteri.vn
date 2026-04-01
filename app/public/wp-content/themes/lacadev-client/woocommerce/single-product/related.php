@@ -32,7 +32,7 @@ if ( function_exists( 'wp_increase_content_media_count' ) ) {
 			<h2 class="sp-related__title"><?php esc_html_e( 'Sản phẩm liên quan', 'lacadev-client' ); ?></h2>
 		</div>
 		<a class="sp-related__view-all" href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
-			<?php esc_html_e( 'Xem tất cả', 'lacadev-client' ); ?>
+			<?php esc_html_e( 'Xem tất cả', 'lacadev-client' ); ?> &nearr;
 		</a>
 	</div>
 
