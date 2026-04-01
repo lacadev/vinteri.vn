@@ -7,16 +7,7 @@ export function initHeaderScroll() {
 	const header = document.getElementById( 'header' );
 	if ( ! header ) return;
 
-	// Set --header-h để wrapper bù chiều cao header fixed
-	const setHeaderHeight = () => {
-		document.documentElement.style.setProperty(
-			'--header-h',
-			header.offsetHeight + 'px'
-		);
-	};
-	setHeaderHeight();
-	new ResizeObserver( setHeaderHeight ).observe( header );
-
+	const controller = new AbortController();
 	let lastScrollTop = 0;
 	const THRESHOLD = 100;
 
@@ -32,5 +23,7 @@ export function initHeaderScroll() {
 		}
 
 		lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-	}, { passive: true } );
+	}, { passive: true, signal: controller.signal } );
+
+	return () => controller.abort();
 }
