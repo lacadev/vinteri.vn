@@ -35,12 +35,16 @@ function app_action_theme_enqueue_assets()
     }
 
     /**
-     * Vendors bundle
+     * Vendors bundle (supports dynamically split chunks)
      */
     $vendors_deps = [];
-    if (file_exists($dist_path . 'vendors.js')) {
-        wp_enqueue_script('theme-vendors-js', $dist_url . 'vendors.js', [], $version, true);
-        $vendors_deps = ['theme-vendors-js'];
+    $vendor_files = ['vendor-swal.js', 'vendor-gsap.js', 'vendor-swiper.js', 'vendors.js'];
+    foreach ($vendor_files as $vfile) {
+        if (file_exists($dist_path . $vfile)) {
+            $handle = 'theme-' . sanitize_title(basename($vfile, '.js'));
+            wp_enqueue_script($handle, $dist_url . $vfile, [], $version, true);
+            $vendors_deps[] = $handle;
+        }
     }
 
     /**
@@ -282,6 +286,8 @@ function app_action_theme_enqueue_assets()
  */
 function app_action_admin_enqueue_assets()
 {
+    wp_enqueue_media();
+
     // Theme::uri() trả về .../lacadev-client/theme/ (nơi đặt style.css)
     // dist/ nằm ở .../lacadev-client/dist/ nên cần dirname() để lên 1 level
     $template_dir = dirname(get_template_directory_uri());
@@ -304,16 +310,18 @@ function app_action_admin_enqueue_assets()
      */
     $admin_deps = [];
     $theme_root = dirname(get_template_directory());
-    $vendors_path = $theme_root . '/dist/vendors.js';
+    $base_uri = get_template_directory_uri();
+    $theme_uri = dirname($base_uri);
     
-    if (file_exists($vendors_path)) {
-        $base_uri = get_template_directory_uri();
-        $theme_uri = dirname($base_uri);
-        $vendors_url = $theme_uri . '/dist/vendors.js';
-        
-        // Load in <head> without defer to ensure Swal is available
-        wp_enqueue_script('theme-vendors-js', $vendors_url, [], wp_get_theme()->get('Version'), false);
-        $admin_deps = ['theme-vendors-js'];
+    $vendor_files = ['vendor-swal.js', 'vendors.js'];
+    foreach ($vendor_files as $vfile) {
+        $vpath = $theme_root . '/dist/' . $vfile;
+        if (file_exists($vpath)) {
+            $handle = 'theme-' . sanitize_title(basename($vfile, '.js'));
+            $vurl = $theme_uri . '/dist/' . $vfile;
+            wp_enqueue_script($handle, $vurl, [], wp_get_theme()->get('Version'), false);
+            $admin_deps[] = $handle;
+        }
     }
 
     /**
