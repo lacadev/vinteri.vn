@@ -18,7 +18,7 @@ $paragraph1    = $attr['paragraph1']   ?? '';
 $paragraph2    = $attr['paragraph2']   ?? '';
 $cta_text      = $attr['ctaText']      ?? '';
 $cta_url       = $attr['ctaUrl']       ?? '#';
-$image_url     = $attr['imageUrl']     ?? '';
+$image_id      = absint( $attr['imageId'] ?? 0 );
 $image_alt     = $attr['imageAlt']     ?? '';
 ?>
 <section <?php echo get_block_wrapper_attributes( [ 'class' => 'vp-block about-craft-block' ] ); ?><?php echo $inline_style; ?>>
@@ -28,13 +28,12 @@ $image_alt     = $attr['imageAlt']     ?? '';
             <?php /* ── Image Column (4/5 aspect) ───────────────────────────────── */ ?>
             <div class="about-craft-block__image-col w-full md:w-1/2 relative flex-shrink-0">
                 <div class="about-craft-block__image-wrap aspect-[4/5] rounded-lg overflow-hidden">
-                    <?php if ( $image_url ) : ?>
-                        <img
-                            src="<?php echo esc_url( $image_url ); ?>"
-                            alt="<?php echo esc_attr( $image_alt ); ?>"
-                            class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                            loading="lazy"
-                        />
+                    <?php if ( $image_id ) : ?>
+                        <?php theResponsiveImage( $image_id, 'tablet', [
+                            'class'   => 'w-full h-full object-cover transition-transform duration-700 hover:scale-105',
+                            'loading' => 'lazy',
+                            'alt'     => esc_attr( $image_alt ),
+                        ] ); ?>
                     <?php else : ?>
                         <div class="w-full h-full bg-stone-100 flex items-center justify-center text-stone-400 text-sm">
                             <?php esc_html_e( 'Chưa có ảnh', 'laca' ); ?>

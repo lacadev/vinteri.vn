@@ -20,35 +20,36 @@ $is_full_width   = (bool) ( $attributes['isFullWidth'] ?? false );
 
 $section_style = $bg_color ? 'background-color: ' . esc_attr( $bg_color ) . ';' : '';
 
-// Inline helper (closure avoids "Cannot redeclare" when block is used multiple times)
+// Inline helper — returns ['id' => int, 'url' => string] for responsive image support.
 $get_term_image = static function ( $term ) {
 	$tax = $term->taxonomy;
 	$tid = $term->term_id;
+
+	// WooCommerce / taxonomy image plugins store attachment ID in 'thumbnail_id'
+	$thumb_id = get_term_meta( $tid, 'thumbnail_id', true );
+	if ( $thumb_id ) {
+		return [ 'id' => absint( $thumb_id ), 'url' => '' ];
+	}
 
 	// ACF Pro / ACF Free
 	if ( function_exists( 'get_field' ) ) {
 		$acf = get_field( 'term_image', $tax . '_' . $tid );
 		if ( $acf ) {
-			return is_array( $acf ) ? esc_url( $acf['url'] ) : esc_url( $acf );
+			if ( is_array( $acf ) && ! empty( $acf['ID'] ) ) {
+				return [ 'id' => absint( $acf['ID'] ), 'url' => '' ];
+			}
+			$url = is_array( $acf ) ? ( $acf['url'] ?? '' ) : $acf;
+			return [ 'id' => 0, 'url' => esc_url( $url ) ];
 		}
 	}
 
 	// Custom meta
 	$url = get_term_meta( $tid, 'term_image_url', true );
 	if ( $url ) {
-		return esc_url( $url );
+		return [ 'id' => 0, 'url' => esc_url( $url ) ];
 	}
 
-	// WooCommerce / taxonomy image plugins
-	$thumb_id = get_term_meta( $tid, 'thumbnail_id', true );
-	if ( $thumb_id ) {
-		$src = wp_get_attachment_image_url( absint( $thumb_id ), 'large' );
-		if ( $src ) {
-			return esc_url( $src );
-		}
-	}
-
-	return '';
+	return [ 'id' => 0, 'url' => '' ];
 };
 
 // Fetch terms
@@ -101,13 +102,19 @@ if ( is_wp_error( $terms ) ) {
 					$link  = esc_url( get_term_link( $term ) );
 					$name  = esc_html( $term->name );
 					$count = absint( $term->count );
-					$img   = $get_term_image( $term );
+					$img_data = $get_term_image( $term );
 				?>
 					<a href="<?php echo $link; ?>" class="block group">
 						<div class="aspect-[4/5] rounded-xl overflow-hidden bg-surface-container-low mb-4">
-							<?php if ( $img ) : ?>
+							<?php if ( $img_data['id'] ) : ?>
+								<?php theResponsiveImage( $img_data['id'], 'mobile', [
+									'class'   => 'w-full h-full object-cover transition-transform duration-700 group-hover:scale-105',
+									'loading' => 'lazy',
+									'alt'     => $name,
+								] ); ?>
+							<?php elseif ( $img_data['url'] ) : ?>
 								<img
-									src="<?php echo $img; ?>"
+									src="<?php echo $img_data['url']; ?>"
 									alt="<?php echo $name; ?>"
 									class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
 									loading="lazy"

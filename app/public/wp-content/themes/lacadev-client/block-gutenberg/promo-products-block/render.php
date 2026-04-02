@@ -76,15 +76,11 @@ if ( $small_count >= 3 ) {
 	$bottom_cols = 'grid-cols-1';
 }
 
-// ── Helper: get category thumbnail (from WooCommerce thumbnail meta) ───────────
-if ( ! function_exists( 'laca_pp_get_cat_thumb_url' ) ) {
-	function laca_pp_get_cat_thumb_url( $term_id, $size = 'woocommerce_single' ) {
+// ── Helper: get category thumbnail ID (from WooCommerce thumbnail meta) ───────
+if ( ! function_exists( 'laca_pp_get_cat_thumb_id' ) ) {
+	function laca_pp_get_cat_thumb_id( $term_id ) {
 		$thumb_id = get_term_meta( $term_id, 'thumbnail_id', true );
-		if ( ! $thumb_id ) {
-			return wc_placeholder_img_src( $size );
-		}
-		$src = wp_get_attachment_image_src( (int) $thumb_id, $size );
-		return $src ? esc_url( $src[0] ) : wc_placeholder_img_src( $size );
+		return $thumb_id ? absint( $thumb_id ) : 0;
 	}
 }
 
@@ -103,8 +99,8 @@ $container_class = ( $container_layout === 'container-fluid' ) ? '' : 'max-w-[19
 
 			<?php /* ──────────────── LEFT: Featured Large Card ──────────────── */ ?>
 			<?php if ( $c0 ) :
-				$c0_url   = esc_url( get_term_link( $c0 ) );
-				$c0_thumb = laca_pp_get_cat_thumb_url( $c0->term_id, 'woocommerce_single' );
+				$c0_url      = esc_url( get_term_link( $c0 ) );
+				$c0_thumb_id = laca_pp_get_cat_thumb_id( $c0->term_id );
 			?>
 			<div class="relative rounded-lg overflow-hidden group flex items-center p-12 md:p-16 min-h-[24rem] md:min-h-0" style="background-color:var(--color-surface-container-low,#F5F5F5)">
 				<div class="z-10 w-1/2">
@@ -125,12 +121,15 @@ $container_class = ( $container_layout === 'container-fluid' ) ? '' : 'max-w-[19
 					</a>
 				</div>
 				<div class="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-4/5">
-					<img
-						src="<?php echo $c0_thumb; ?>"
-						alt="<?php echo esc_attr( $c0->name ); ?>"
-						class="w-full h-full object-contain promo-card-img group-hover:scale-105 transition-transform duration-700"
-						loading="lazy"
-					/>
+					<?php if ( $c0_thumb_id ) : ?>
+						<?php theResponsiveImage( $c0_thumb_id, 'tablet', [
+							'class'   => 'w-full h-full object-contain promo-card-img group-hover:scale-105 transition-transform duration-700',
+							'loading' => 'lazy',
+							'alt'     => esc_attr( $c0->name ),
+						] ); ?>
+					<?php else : ?>
+						<img src="<?php echo esc_url( wc_placeholder_img_src( 'woocommerce_single' ) ); ?>" alt="<?php echo esc_attr( $c0->name ); ?>" class="w-full h-full object-contain" loading="lazy" />
+					<?php endif; ?>
 				</div>
 			</div>
 			<?php else : ?>
@@ -144,8 +143,8 @@ $container_class = ( $container_layout === 'container-fluid' ) ? '' : 'max-w-[19
 
 				<?php /* ── Top Right: Promo Card ── */ ?>
 				<?php if ( $c1 ) :
-					$c1_url   = esc_url( get_term_link( $c1 ) );
-					$c1_thumb = laca_pp_get_cat_thumb_url( $c1->term_id, 'woocommerce_single' );
+					$c1_url      = esc_url( get_term_link( $c1 ) );
+					$c1_thumb_id = laca_pp_get_cat_thumb_id( $c1->term_id );
 				?>
 				<div class="rounded-lg overflow-hidden group flex items-center p-8 md:p-12 relative" style="background-color:var(--color-surface-container-low,#F5F5F5)">
 					<div class="z-10 w-1/2">
@@ -166,12 +165,15 @@ $container_class = ( $container_layout === 'container-fluid' ) ? '' : 'max-w-[19
 						</a>
 					</div>
 					<div class="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-full py-4">
-						<img
-							src="<?php echo $c1_thumb; ?>"
-							alt="<?php echo esc_attr( $c1->name ); ?>"
-							class="w-full h-full object-contain promo-card-img group-hover:scale-105 transition-transform duration-700"
-							loading="lazy"
-						/>
+						<?php if ( $c1_thumb_id ) : ?>
+							<?php theResponsiveImage( $c1_thumb_id, 'mobile', [
+								'class'   => 'w-full h-full object-contain promo-card-img group-hover:scale-105 transition-transform duration-700',
+								'loading' => 'lazy',
+								'alt'     => esc_attr( $c1->name ),
+							] ); ?>
+						<?php else : ?>
+							<img src="<?php echo esc_url( wc_placeholder_img_src( 'woocommerce_single' ) ); ?>" alt="<?php echo esc_attr( $c1->name ); ?>" class="w-full h-full object-contain" loading="lazy" />
+						<?php endif; ?>
 					</div>
 				</div>
 				<?php else : ?>
@@ -184,8 +186,8 @@ $container_class = ( $container_layout === 'container-fluid' ) ? '' : 'max-w-[19
 				<?php if ( ! empty( $small_cats ) ) : ?>
 				<div class="grid <?php echo esc_attr( $bottom_cols ); ?> gap-6">
 					<?php foreach ( $small_cats as $sc ) :
-						$sc_url   = esc_url( get_term_link( $sc ) );
-						$sc_thumb = laca_pp_get_cat_thumb_url( $sc->term_id, 'woocommerce_thumbnail' );
+						$sc_url      = esc_url( get_term_link( $sc ) );
+						$sc_thumb_id = laca_pp_get_cat_thumb_id( $sc->term_id );
 					?>
 					<a href="<?php echo $sc_url; ?>"
 					   class="rounded-lg overflow-hidden group p-6 flex flex-col justify-between no-underline hover:no-underline" style="background-color:var(--color-surface-container-low,#F5F5F5)">
@@ -198,12 +200,15 @@ $container_class = ( $container_layout === 'container-fluid' ) ? '' : 'max-w-[19
 							</h3>
 						</div>
 						<div class="mt-4 flex-grow flex items-center justify-center h-32 overflow-hidden">
-							<img
-								src="<?php echo $sc_thumb; ?>"
-								alt="<?php echo esc_attr( $sc->name ); ?>"
-								class="w-full h-full object-contain promo-card-img group-hover:scale-105 transition-transform duration-700"
-								loading="lazy"
-							/>
+							<?php if ( $sc_thumb_id ) : ?>
+								<?php theResponsiveImage( $sc_thumb_id, 'mobile', [
+									'class'   => 'w-full h-full object-contain promo-card-img group-hover:scale-105 transition-transform duration-700',
+									'loading' => 'lazy',
+									'alt'     => esc_attr( $sc->name ),
+								] ); ?>
+							<?php else : ?>
+								<img src="<?php echo esc_url( wc_placeholder_img_src( 'woocommerce_thumbnail' ) ); ?>" alt="<?php echo esc_attr( $sc->name ); ?>" class="w-full h-full object-contain" loading="lazy" />
+							<?php endif; ?>
 						</div>
 					</a>
 					<?php endforeach; ?>

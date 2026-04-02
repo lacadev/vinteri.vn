@@ -148,7 +148,6 @@ $inline_style = $bg_color ? ' style="background-color:' . esc_attr( $bg_color ) 
 
 					$product_url   = get_permalink();
 					$product_title = get_the_title();
-					$product_img   = get_the_post_thumbnail_url( get_the_ID(), 'woocommerce_single' );
 
 					// Price
 					$price_html = $product->get_price_html();
@@ -164,13 +163,11 @@ $inline_style = $bg_color ? ' style="background-color:' . esc_attr( $bg_color ) 
 					<div class="group cursor-pointer">
 						<a href="<?php echo esc_url( $product_url ); ?>" class="block" tabindex="-1" aria-hidden="true">
 							<div class="aspect-[4/5] overflow-hidden rounded-lg mb-6" style="background-color:var(--color-surface-container-low,#F5F5F5)">
-								<?php if ( $product_img ) : ?>
-									<img
-										src="<?php echo esc_url( $product_img ); ?>"
-										alt="<?php echo esc_attr( $product_title ); ?>"
-										class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-										loading="lazy"
-									/>
+								<?php if ( has_post_thumbnail() ) : ?>
+									<?php theResponsivePostThumbnail( 'mobile', [
+										'class'   => 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105',
+										'loading' => 'lazy',
+									] ); ?>
 								<?php else : ?>
 									<div class="w-full h-full flex items-center justify-center" style="color:var(--color-on-surface-variant,#999);font-size:3rem;">🛒</div>
 								<?php endif; ?>

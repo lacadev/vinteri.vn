@@ -15,22 +15,21 @@ $subtitle        = $attr['subTitle']    ?? '';
 $title           = $attr['title']       ?? '';
 $title_italic    = $attr['titleItalic'] ?? '';
 $description     = $attr['description'] ?? '';
-$image_url       = $attr['imageUrl']    ?? '';
+$image_id        = absint( $attr['imageId'] ?? 0 );
 $image_alt       = $attr['imageAlt']    ?? '';
 $overlay         = intval( $attr['overlayOpacity'] ?? 10 );
 $overlay_dec     = $overlay / 100;
 ?>
 <section <?php echo get_block_wrapper_attributes( [ 'class' => 'vp-block about-hero-block' ] ); ?><?php echo $inline_style; ?>>
     <div class="about-hero-block__inner">
-        <?php if ( $image_url ) : ?>
+        <?php if ( $image_id ) : ?>
             <div class="about-hero-block__bg">
-                <img
-                    src="<?php echo esc_url( $image_url ); ?>"
-                    alt="<?php echo esc_attr( $image_alt ); ?>"
-                    class="about-hero-block__bg-img"
-                    loading="eager"
-                    fetchpriority="high"
-                />
+                <?php theResponsiveImage( $image_id, 'full', [
+                    'class'         => 'about-hero-block__bg-img',
+                    'loading'       => 'eager',
+                    'fetchpriority' => 'high',
+                    'alt'           => esc_attr( $image_alt ),
+                ] ); ?>
                 <div class="about-hero-block__overlay" style="background-color: rgba(0,0,0,<?php echo esc_attr( $overlay_dec ); ?>);"></div>
             </div>
         <?php endif; ?>

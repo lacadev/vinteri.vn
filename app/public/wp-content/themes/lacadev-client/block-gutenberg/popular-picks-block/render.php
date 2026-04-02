@@ -160,11 +160,10 @@ $block_id = 'pp-block-' . wp_unique_id();
 				$product_name  = esc_html( $product->get_name() );
 				$product_price = $product->get_price_html();
 				$product_url   = esc_url( get_permalink() );
-				$product_img   = get_the_post_thumbnail_url( get_the_ID(), 'woocommerce_single' );
-				$product_img   = $product_img ? esc_url( $product_img ) : '';
+				$product_id    = get_the_ID();
 
 				// Collect category slugs for JS filtering
-				$cat_terms = get_the_terms( get_the_ID(), 'product_cat' );
+				$cat_terms = get_the_terms( $product_id, 'product_cat' );
 				$cat_slugs = [];
 				if ( $cat_terms && ! is_wp_error( $cat_terms ) ) {
 					$cat_slugs = array_map( fn( $t ) => $t->slug, $cat_terms );
@@ -174,15 +173,12 @@ $block_id = 'pp-block-' . wp_unique_id();
 			<div class="group" data-pp-card data-cats="<?php echo $data_cats; ?>">
 
 				<div class="relative aspect-[3/4] rounded-lg overflow-hidden mb-6">
-					<?php if ( $product_img ) : ?>
+					<?php if ( has_post_thumbnail( $product_id ) ) : ?>
 						<a href="<?php echo $product_url; ?>" tabindex="-1" aria-hidden="true">
-							<img
-								src="<?php echo $product_img; ?>"
-								alt="<?php echo $product_name; ?>"
-								class="pp-product-img w-full h-full object-cover"
-								loading="lazy"
-								decoding="async"
-							/>
+							<?php theResponsivePostThumbnail( 'mobile', [
+								'class'   => 'pp-product-img w-full h-full object-cover',
+								'loading' => 'lazy',
+							] ); ?>
 						</a>
 					<?php else : ?>
 						<div class="w-full h-full flex items-center justify-center text-6xl bg-stone-100">🛋</div>

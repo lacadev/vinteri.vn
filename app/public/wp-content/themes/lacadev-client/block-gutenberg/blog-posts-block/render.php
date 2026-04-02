@@ -101,8 +101,6 @@ $query = new WP_Query( $query_args );
                         $post_link   = esc_url( get_permalink() );
                         $post_title  = get_the_title();
                         $post_exc    = wp_trim_words( get_the_excerpt(), 22, '...' );
-                        $thumb_url   = get_the_post_thumbnail_url( $post_id, 'large' );
-                        $thumb_alt   = esc_attr( get_post_meta( get_post_thumbnail_id( $post_id ), '_wp_attachment_image_alt', true ) ?: $post_title );
 
                         // Lấy term đầu tiên của taxonomy đang dùng
                         $cat_name = '';
@@ -121,13 +119,11 @@ $query = new WP_Query( $query_args );
                         ?>
                         <article class="group">
                             <a href="<?php echo $post_link; ?>" class="block overflow-hidden rounded-lg mb-8 aspect-video bg-surface-container-high">
-                                <?php if ( $thumb_url ) : ?>
-                                    <img
-                                        src="<?php echo esc_url( $thumb_url ); ?>"
-                                        alt="<?php echo $thumb_alt; ?>"
-                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                        loading="lazy"
-                                    />
+                                <?php if ( has_post_thumbnail( $post_id ) ) : ?>
+                                    <?php theResponsivePostThumbnail( 'tablet', [
+                                        'class'   => 'w-full h-full object-cover transition-transform duration-700 group-hover:scale-105',
+                                        'loading' => 'lazy',
+                                    ] ); ?>
                                 <?php else : ?>
                                     <div class="w-full h-full flex items-center justify-center text-on-surface-variant text-sm">
                                         <?php esc_html_e( 'Chưa có ảnh', 'laca' ); ?>

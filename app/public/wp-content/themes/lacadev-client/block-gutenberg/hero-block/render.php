@@ -24,7 +24,7 @@ $button_text = esc_html( $attr['buttonText'] ?? 'Shop The Piece' );
 $button_url  = esc_url( $attr['buttonUrl'] ?? '#' );
 
 // Image
-$image_url = esc_url( $attr['imageUrl'] ?? '' );
+$image_id  = absint( $attr['imageId'] ?? 0 );
 $image_alt = esc_attr( $attr['imageAlt'] ?? '' );
 ?>
 
@@ -65,14 +65,13 @@ $image_alt = esc_attr( $attr['imageAlt'] ?? '' );
 
                 <!-- Image Column -->
                 <div class="md:col-span-7 relative">
-                    <?php if ( $image_url ) : ?>
+                    <?php if ( $image_id ) : ?>
                         <div class="hero-image-wrapper w-full rounded-xl overflow-hidden shadow-sm relative group bg-surface-container">
-                            <img
-                                src="<?php echo $image_url; ?>"
-                                alt="<?php echo $image_alt; ?>"
-                                class="w-full h-full object-cover"
-                                loading="eager"
-                            />
+                            <?php theResponsiveImage( $image_id, 'full', [
+                                'class'   => 'w-full h-full object-cover',
+                                'loading' => 'eager',
+                                'alt'     => $image_alt,
+                            ] ); ?>
                         </div>
                         <!-- Decorative blur element -->
                         <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-secondary-fixed/30 rounded-full blur-3xl -z-10 pointer-events-none"></div>

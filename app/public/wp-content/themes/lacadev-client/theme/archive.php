@@ -1,100 +1,155 @@
 <?php
 /**
- * App Layout: layouts/app.php
+ * Archive Template - Journal List
  *
- * This is the template that is used for displaying all posts by default.
+ * Editorial layout with:
+ * - Featured hero post (image + overlapping info card)
+ * - Category filter tabs
+ * - Asymmetric editorial grid
+ * - Pagination
  *
- * @package WPEmergeTheme
+ * @package lacadev
  */
 
-theBreadcrumb();
+get_header();
 
-// Get the current layout preference for taxonomy archives
-$layout = 'card';
-if (is_tax() || is_category() || is_tag()) {
-    $term_id = get_queried_object_id();
-    $layout = carbon_get_term_meta($term_id, 'crb_archive_layout') ?: 'card';
+// Get categories for filter tabs
+$categories = get_categories(['hide_empty' => true]);
+$current_cat = is_category() ? get_queried_object() : null;
+
+// Separate featured (first) post from the grid
+$featured_post = null;
+$grid_posts    = [];
+
+if (have_posts()) {
+    // N+1 prevention
+    update_post_caches($GLOBALS['wp_query']->posts, 'post', true, true);
+    update_object_term_cache(wp_list_pluck($GLOBALS['wp_query']->posts, 'ID'), 'post');
+
+    $all_posts = $GLOBALS['wp_query']->posts;
+    
+    // Only show featured hero on page 1
+    $paged = get_query_var('paged', 1);
+    if ($paged <= 1 && !empty($all_posts)) {
+        $featured_post = $all_posts[0];
+        $grid_posts = array_slice($all_posts, 1);
+    } else {
+        $grid_posts = $all_posts;
+    }
 }
-
-// Map 'block-blog' style classes if using card layout
-$wrapper_class = ($layout === 'staggered') ? 'block-staggered-blog' : 'block-blog';
 ?>
 
-<main class="archive-post <?php echo esc_attr($wrapper_class); ?>">
-    <?php get_template_part('template-parts/page-hero'); ?>
+<main class="journal-archive">
+    <?php theBreadcrumb(); ?>
 
-    <div class="container">
-        <div class="archive-content">
-            <?php if (have_posts()) : ?>
-                <?php
-                // START: N+1 Prevention
-                $current_post_type = get_post_type() ?: 'post';
-                update_post_caches($GLOBALS['wp_query']->posts, $current_post_type, true, true);
-                update_object_term_cache(wp_list_pluck($GLOBALS['wp_query']->posts, 'ID'), $current_post_type);
-                // END: N+1 Prevention
-                ?>
+    <?php // --- Featured Hero Post --- ?>
+    <?php if ($featured_post):
+        $fp_id       = $featured_post->ID;
+        $fp_cats     = get_the_terms($fp_id, 'category');
+        $fp_cat_name = $fp_cats ? $fp_cats[0]->name : '';
+        $fp_excerpt  = wp_trim_words(get_the_excerpt($fp_id), 30, '...');
+    ?>
+        <section class="journal-hero">
+            <div class="container">
+                <a href="<?php echo esc_url(get_permalink($fp_id)); ?>" class="journal-hero__link">
+                    <div class="journal-hero__grid">
+                        <div class="journal-hero__image">
+                            <?php echo getResponsivePostThumbnail($fp_id, 'full'); ?>
+                        </div>
+                        <div class="journal-hero__info">
+                            <?php if ($fp_cat_name): ?>
+                                <span class="journal-hero__cat"><?php echo esc_html($fp_cat_name); ?></span>
+                            <?php endif; ?>
+                            <h2 class="journal-hero__title"><?php echo esc_html(get_the_title($fp_id)); ?></h2>
+                            <p class="journal-hero__excerpt"><?php echo esc_html($fp_excerpt); ?></p>
+                            <span class="journal-hero__cta">
+                                <?php _e('Đọc bài viết', 'laca'); ?> →
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+    <?php endif; ?>
 
-                <div class="<?php echo ($layout === 'staggered') ? 'staggered-list' : 'blog-list'; ?>">
-                    <?php 
-                    $index = 0;
-                    while (have_posts()) : the_post(); 
-                        if ($layout === 'staggered') :
-                            $is_even = ($index % 2 !== 0);
-                            $excerpt = get_the_excerpt();
-                            $excerpt = wp_trim_words($excerpt, 50, '...');
-                            ?>
-                            <div class="staggered-item <?php echo $is_even ? 'staggered-item--even' : 'staggered-item--odd'; ?>">
-                                <div class="staggered-item__content">
-                                    <h3 class="staggered-item__title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                    </h3>
-                                    <div class="staggered-item__desc">
-                                        <?php echo esc_html($excerpt); ?>
-                                    </div>
-                                </div>
-                                <div class="staggered-item__image">
-                                    <a href="<?php the_permalink(); ?>">
-                                        <?php theResponsivePostThumbnail('tablet', ['alt' => esc_attr(get_the_title())]); ?>
-                                    </a>
-                                </div>
-                            </div>
-                            <?php
-                        else :
-                            $author_name = get_the_author();
-                            $time_diff = human_time_diff(get_the_time('U'), current_time('timestamp'));
-                            $time_diff_text = sprintf(__('%s ago', 'laca'), $time_diff);
-                            ?>
-                            <div class="blog-item">
-                                <div class="blog-card">
-                                    <a href="<?php the_permalink(); ?>" class="card-link">
-                                        <div class="card-image-wrap">
-                                            <?php theResponsivePostThumbnail('mobile', ['alt' => esc_attr(get_the_title())]); ?>
-                                        </div>
-                                        <div class="card-body">
-                                            <h3 class="card-title"><?php the_title(); ?></h3>
-                                            <div class="card-meta">
-                                                <span class="meta-author"><?php printf(__('By %s', 'laca'), esc_html($author_name)); ?></span>
-                                                <span class="meta-date"><?php echo esc_html($time_diff_text); ?></span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <?php
-                        endif;
-                        $index++;
-                    endwhile; 
-                    ?>
+    <?php // --- Category Tabs --- ?>
+    <section class="journal-tabs">
+        <div class="container">
+            <div class="journal-tabs__inner">
+                <div class="journal-tabs__list">
+                    <a href="<?php echo esc_url(get_post_type_archive_link('post')); ?>" 
+                       class="journal-tabs__item <?php echo !$current_cat ? 'is-active' : ''; ?>">
+                        <?php _e('Tất cả', 'laca'); ?>
+                    </a>
+                    <?php foreach ($categories as $cat): ?>
+                        <a href="<?php echo esc_url(get_category_link($cat->term_id)); ?>" 
+                           class="journal-tabs__item <?php echo ($current_cat && $current_cat->term_id === $cat->term_id) ? 'is-active' : ''; ?>">
+                            <?php echo esc_html($cat->name); ?>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
-
-                <?php thePagination(); ?>
-
-            <?php else : ?>
-                <div class="no-posts">
-                    <p><?php _e('Chưa có bài viết nào trong mục này.', 'laca'); ?></p>
-                </div>
-            <?php endif; ?>
+            </div>
         </div>
+    </section>
+
+    <?php // --- Editorial Grid --- ?>
+    <?php if (!empty($grid_posts)): ?>
+        <section class="journal-grid">
+            <div class="container">
+                <div class="journal-grid__inner">
+                    <?php 
+                    $total = count($grid_posts);
+                    foreach ($grid_posts as $i => $gp):
+                        $gp_id   = $gp->ID;
+                        $gp_cats = get_the_terms($gp_id, 'category');
+                        $gp_cat  = $gp_cats ? $gp_cats[0]->name : '';
+                        $gp_excerpt = wp_trim_words(get_the_excerpt($gp_id), 20, '...');
+
+                        // Determine card variant based on position in group of 5
+                        $pos = $i % 5;
+                        // 0,1,2 = standard 3-col; 3 = wide (2-col); 4 = small (1-col)
+                        $card_class = 'journal-card';
+                        $aspect = 'journal-card--portrait'; // 3:4
+                        if ($pos === 1) $aspect = 'journal-card--square';
+                        if ($pos === 2) $aspect = 'journal-card--tall'; // 4:5
+                        if ($pos === 3) { $card_class .= ' journal-card--wide'; $aspect = 'journal-card--landscape'; }
+                        if ($pos === 4) $aspect = 'journal-card--portrait';
+                        // Offset the middle column
+                        if ($pos === 1) $card_class .= ' journal-card--offset';
+                    ?>
+                        <a href="<?php echo esc_url(get_permalink($gp_id)); ?>" 
+                           class="<?php echo esc_attr($card_class); ?>">
+                            <div class="journal-card__image <?php echo esc_attr($aspect); ?>">
+                                <?php echo getResponsivePostThumbnail($gp_id, 'medium_large'); ?>
+                            </div>
+                            <?php if ($gp_cat): ?>
+                                <span class="journal-card__cat"><?php echo esc_html($gp_cat); ?></span>
+                            <?php endif; ?>
+                            <h3 class="journal-card__title"><?php echo esc_html(get_the_title($gp_id)); ?></h3>
+                            <?php if ($pos !== 4): // Hide excerpt on small cards ?>
+                                <p class="journal-card__excerpt"><?php echo esc_html($gp_excerpt); ?></p>
+                            <?php endif; ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+    <?php endif; ?>
+
+    <?php // --- No Posts --- ?>
+    <?php if (!have_posts()): ?>
+        <div class="container">
+            <div class="journal-empty">
+                <p><?php _e('Chưa có bài viết nào.', 'laca'); ?></p>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php // --- Pagination --- ?>
+    <div class="container">
+        <?php thePagination(); ?>
     </div>
+
 </main>
-<?php wp_reset_postdata(); ?>
+
+<?php get_footer(); ?>

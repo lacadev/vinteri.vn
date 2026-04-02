@@ -14,14 +14,14 @@ $inline_style    = $bg_color ? ' style="background-color: ' . esc_attr( $bg_colo
 $section_title = $attr['sectionTitle']   ?? '';
 $item1_title   = $attr['item1Title']     ?? '';
 $item1_text    = $attr['item1Text']      ?? '';
-$item1_img     = $attr['item1ImageUrl']  ?? '';
+$item1_id      = absint( $attr['item1ImageId'] ?? 0 );
 $item1_alt     = $attr['item1ImageAlt']  ?? '';
 $item2_title   = $attr['item2Title']     ?? '';
 $item2_text    = $attr['item2Text']      ?? '';
 $item3_title   = $attr['item3Title']     ?? '';
 $item3_text    = $attr['item3Text']      ?? '';
 $item4_title   = $attr['item4Title']     ?? '';
-$item4_img     = $attr['item4ImageUrl']  ?? '';
+$item4_id      = absint( $attr['item4ImageId'] ?? 0 );
 $item4_alt     = $attr['item4ImageAlt']  ?? '';
 ?>
 <section <?php echo get_block_wrapper_attributes( [ 'class' => 'vp-block about-philosophy-block' ] ); ?><?php echo $inline_style; ?>>
@@ -52,14 +52,13 @@ $item4_alt     = $attr['item4ImageAlt']  ?? '';
                         </p>
                     <?php endif; ?>
                 </div>
-                <?php if ( $item1_img ) : ?>
+                <?php if ( $item1_id ) : ?>
                     <div class="overflow-hidden rounded-xl aspect-[21/9]">
-                        <img
-                            src="<?php echo esc_url( $item1_img ); ?>"
-                            alt="<?php echo esc_attr( $item1_alt ); ?>"
-                            class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                            loading="lazy"
-                        />
+                        <?php theResponsiveImage( $item1_id, 'tablet', [
+                            'class'   => 'w-full h-full object-cover transition-transform duration-700 hover:scale-105',
+                            'loading' => 'lazy',
+                            'alt'     => esc_attr( $item1_alt ),
+                        ] ); ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -95,13 +94,12 @@ $item4_alt     = $attr['item4ImageAlt']  ?? '';
 
             <?php /* ── Bento 4 — col-span-8 (fullscreen image + gradient overlay) ── */ ?>
             <div class="about-philosophy-block__bento4 md:col-span-8 rounded-2xl overflow-hidden relative min-h-[24rem]">
-                <?php if ( $item4_img ) : ?>
-                    <img
-                        src="<?php echo esc_url( $item4_img ); ?>"
-                        alt="<?php echo esc_attr( $item4_alt ); ?>"
-                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                        loading="lazy"
-                    />
+                <?php if ( $item4_id ) : ?>
+                    <?php theResponsiveImage( $item4_id, 'tablet', [
+                        'class'   => 'absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105',
+                        'loading' => 'lazy',
+                        'alt'     => esc_attr( $item4_alt ),
+                    ] ); ?>
                 <?php else : ?>
                     <div class="absolute inset-0 bg-stone-200 flex items-center justify-center text-stone-400 text-sm">
                         <?php esc_html_e( 'Chưa có ảnh Bento 4', 'laca' ); ?>
