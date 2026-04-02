@@ -35,8 +35,8 @@
 
 		console.log( 'Search input found:', searchInput );
 		console.log(
-			'themeSearch data:',
-			typeof themeSearch !== 'undefined' ? themeSearch : 'NOT AVAILABLE'
+			'themeData data:',
+			typeof themeData !== 'undefined' ? themeData : 'NOT AVAILABLE'
 		);
 
 		// Create search results container if it doesn't exist
@@ -105,13 +105,13 @@
 	function performSearch( query, resultsContainer ) {
 		console.log( 'Performing search for:', query );
 
-		// Check if themeSearch is available
-		if ( typeof themeSearch === 'undefined' ) {
-			console.error( 'themeSearch data not available!' );
+		// Check if themeData is available
+		if ( typeof themeData === 'undefined' ) {
+			console.error( 'themeData data not available!' );
 			return;
 		}
 
-		console.log( 'AJAX URL:', themeSearch.ajaxurl );
+		console.log( 'AJAX URL:', themeData.ajaxurl );
 
 		// Show loading indicator
 		resultsContainer.innerHTML =
@@ -122,11 +122,11 @@
 		const params = new URLSearchParams( {
 			action: 'ajax_search',
 			s: query,
-			nonce: themeSearch.nonce,
+			nonce: themeData.nonce,
 		} );
 
 		// Perform fetch request
-		fetch( `${ themeSearch.ajaxurl }?${ params.toString() }`, {
+		fetch( `${ themeData.ajaxurl }?${ params.toString() }`, {
 			method: 'GET',
 			headers: {
 				'X-Requested-With': 'XMLHttpRequest',

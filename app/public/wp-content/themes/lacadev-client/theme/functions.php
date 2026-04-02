@@ -187,13 +187,14 @@ foreach ($folders as $folder) {
 }
 
 /**
- * Localize AJAX search data (script bundled in theme.js)
+ * Localize AJAX search data (compiled theme.js uses themeSearch)
+ * Uses theme_nonce to match the AJAX handler in ajax.php
  */
 function custom_ajax_search_script()
 {
     wp_localize_script('theme-js-bundle', 'themeSearch', [
         'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('theme_search_nonce'),
+        'nonce' => wp_create_nonce('theme_nonce'),
     ]);
 }
 add_action('wp_enqueue_scripts', 'custom_ajax_search_script');

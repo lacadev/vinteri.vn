@@ -207,8 +207,8 @@ function mms_ajax_search() {
     // Rate limiting: 20 requests per minute
     lacadev_check_rate_limit('ajax_search', 20, 60);
     
-    // Security check
-    check_ajax_referer('theme_search_nonce', 'nonce');
+    // Security check (nonce from themeData localized in assets.php)
+    check_ajax_referer('theme_nonce', 'nonce');
 
     // Get search query
     $search_query = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
@@ -263,32 +263,61 @@ function mms_ajax_search() {
     foreach ($grouped_results as $type => $posts) {
         $post_type_obj = get_post_type_object($type);
         $type_label = $post_type_obj->labels->name ?? ucfirst($type);
-        $html .= lacadev_render_search_section($type_label, $posts);
+        $html .= lacadev_render_search_section($type_label, $posts, $type);
     }
+
+    // Add "View all" link
+    $search_url = home_url('/?s=' . urlencode($search_query));
+    $html .= '<a href="' . esc_url($search_url) . '" class="search-dd__viewall">Xem tất cả kết quả →</a>';
 
     echo $html;
     wp_die();
 }
 
 /**
- * Html Partial cho mỗi section
+ * Html Partial cho mỗi section trong AJAX dropdown
  */
-function lacadev_render_search_section($title, $posts) {
+function lacadev_render_search_section($title, $posts, $type = '') {
+    // Icons for each post type
+    $icons = [
+        'product' => '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>',
+        'post'    => '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+        'page'    => '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>',
+    ];
+    $icon = $icons[$type] ?? $icons['page'];
+
     ob_start();
     ?>
-    <div class="search-results__section">
-        <h3 class="search-results__title">
-            <strong><?php echo esc_html($title); ?> liên quan</strong> 
-            <span class="search-results__count">(<?php echo count($posts); ?> kết quả)</span>:
-        </h3>
-        <div class="search-results__list">
-            <?php foreach ($posts as $p): ?>
-                <a href="<?php echo esc_url(get_permalink($p->ID)); ?>" class="search-results__item">
-                    <div class="search-results__image">
-                        <?php echo getResponsivePostThumbnail($p->ID, 'mobile', ['alt' => get_the_title($p->ID)]); ?>
+    <div class="search-dd__section" data-type="<?php echo esc_attr($type); ?>">
+        <div class="search-dd__section-header">
+            <span class="search-dd__section-icon"><?php echo $icon; ?></span>
+            <span class="search-dd__section-label"><?php echo esc_html($title); ?></span>
+            <span class="search-dd__section-count"><?php echo count($posts); ?></span>
+        </div>
+        <div class="search-dd__section-list">
+            <?php foreach ($posts as $p): 
+                $thumb = get_the_post_thumbnail_url($p->ID, 'thumbnail');
+                $price_html = '';
+                if ($type === 'product' && function_exists('wc_get_product')) {
+                    $product = wc_get_product($p->ID);
+                    if ($product) {
+                        $price_html = $product->get_price_html();
+                    }
+                }
+            ?>
+                <a href="<?php echo esc_url(get_permalink($p->ID)); ?>" class="search-dd__item">
+                    <div class="search-dd__item-thumb">
+                        <?php if ($thumb): ?>
+                            <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr(get_the_title($p->ID)); ?>" loading="lazy">
+                        <?php else: ?>
+                            <div class="search-dd__item-nothumb"><?php echo $icon; ?></div>
+                        <?php endif; ?>
                     </div>
-                    <div class="search-results__content">
-                        <h4 class="search-results__item-title"><?php echo esc_html(get_the_title($p->ID)); ?></h4>
+                    <div class="search-dd__item-info">
+                        <h4 class="search-dd__item-title"><?php echo esc_html(get_the_title($p->ID)); ?></h4>
+                        <?php if ($price_html): ?>
+                            <span class="search-dd__item-price"><?php echo $price_html; ?></span>
+                        <?php endif; ?>
                     </div>
                 </a>
             <?php endforeach; ?>

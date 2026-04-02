@@ -9,15 +9,16 @@ if (!defined('ABSPATH')) {
  * @package LacaDev
  */
 
+// Generate CSP Nonce ONCE at file load time
+if (!defined('LACA_CSP_NONCE')) {
+    define('LACA_CSP_NONCE', base64_encode(random_bytes(16)));
+}
+
 /**
  * Add HTTP Security Headers
  */
 add_action('send_headers', function() {
-    // Generate Nonce
-    $nonce = base64_encode(random_bytes(16));
-    if (!defined('LACA_CSP_NONCE')) {
-        define('LACA_CSP_NONCE', $nonce);
-    }
+    $nonce = LACA_CSP_NONCE;
 
     // Prevent clickjacking
     header('X-Frame-Options: SAMEORIGIN');
@@ -34,7 +35,7 @@ add_action('send_headers', function() {
     if ( ! is_admin() ) {
         // Content Security Policy
         $csp  = "default-src 'self'; ";
-        $csp .= "script-src 'self' 'nonce-{$nonce}' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com https://www.google-analytics.com https://images.dmca.com https://apis.google.com blob:; ";
+        $csp .= "script-src 'self' 'unsafe-inline' 'nonce-{$nonce}' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com https://www.google-analytics.com https://images.dmca.com https://apis.google.com blob:; ";
         $csp .= "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; ";
         $csp .= "font-src 'self' https://fonts.gstatic.com data:; ";
         $csp .= "connect-src 'self' https://www.google.com https://www.gstatic.com https://www.youtube.com https://www.google-analytics.com https://stats.g.doubleclick.net https://apis.google.com ws: wss:; ";
@@ -52,7 +53,7 @@ add_action('send_headers', function() {
 });
 
 /**
- * Inject Nonce into script tags
+ * Inject Nonce into enqueued script tags
  */
 add_filter('script_loader_tag', function($tag, $handle) {
     if ( is_admin() ) {
@@ -66,6 +67,20 @@ add_filter('script_loader_tag', function($tag, $handle) {
     }
     return $tag;
 }, 10, 2);
+
+/**
+ * Inject Nonce into WordPress inline scripts (wp_localize_script, wp_add_inline_script, etc.)
+ * This filter is available since WordPress 5.7
+ */
+add_filter('wp_inline_script_attributes', function($attributes) {
+    if ( is_admin() ) {
+        return $attributes;
+    }
+    if (defined('LACA_CSP_NONCE')) {
+        $attributes['nonce'] = LACA_CSP_NONCE;
+    }
+    return $attributes;
+}, 10, 1);
 
 /**
  * Remove WordPress version from head

@@ -16,17 +16,17 @@ $search_query = get_search_query();
     <div class="container">
         <?php theBreadcrumb(); ?>
         
-        <h1 class="title-single text-center my-5 text-uppercase">
-            <?php _e('Kết quả tìm kiếm', 'laca'); ?>
+        <h1 class="title-single text-center my-5">
+            <?php printf(__('Kết quả tìm kiếm theo từ khóa: "%s"', 'laca'), esc_html($search_query)); ?>
         </h1>
-        <h4 class="title-result text-center mb-5">
-            <?php printf(__('Từ khóa: "%s"', 'laca'), esc_html($search_query)); ?>
-        </h4>
 
         <?php
         // Get all public post types
         $post_types = get_post_types(['public' => true], 'objects');
         $has_results = false;
+        
+        // Apply title-only search filter (same as AJAX search)
+        add_filter('posts_search', 'lacadev_improve_search_relevance', 10, 2);
         
         // Organize post types
         $organized_types = [
@@ -264,6 +264,10 @@ $search_query = get_search_query();
                 }
             }
         }
+        
+        
+        // Remove title-only filter after all searches
+        remove_filter('posts_search', 'lacadev_improve_search_relevance', 10);
         
         // No results found
         if (!$has_results) {

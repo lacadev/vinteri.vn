@@ -158,7 +158,27 @@ if (!defined('ABSPATH')) {
                                     </form>
                                 </div>
                             </div>
+                            
+                            <!-- hamburger menu -->
+                            <button id="btn-hamburger" class="header__hamburger" aria-label="Menu">
+                                <span></span><span></span><span></span>
+                            </button>
                         </div>
+                    </div>
+                </div>
+
+                <div class="header__overlay">
+                    <div class="header__overlay-inner">
+                        <nav class="header__overlay-menu">
+                            <?php
+                            wp_nav_menu([
+                                'theme_location' => 'main-menu',
+                                'container' => 'div',
+                                'container_class' => 'mobile-nav',
+                                'walker' => new Laca_Menu_Walker(),
+                            ]);
+                            ?>
+                        </nav>
                     </div>
                 </div>
             </header>
